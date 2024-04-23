@@ -1,41 +1,67 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <!-- <RouterLink to="/">Home</RouterLink> -->
+        <!-- <RouterLink to="/about">About</RouterLink> -->
+        <div class="nav-left">
+          <button>
+            <font-awesome-icon icon="fa-solid fa-bars" />
+          </button>
+          <button>
+            <span><font-awesome-icon icon="fa-solid fa-chart-simple" /></span>
+            ToDoApp</button>
+          <button>More <span>
+              <font-awesome-icon icon="fa-solid fa-chevron-down" />
+            </span></button>
+          <button><font-awesome-icon icon="fa-solid fa-plus" /></button>
+        </div>
+        <div class="nav-right">
+          <button>
+            <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+          </button>
+          <button><font-awesome-icon icon="fa-solid fa-bell" /></button>
+          <button><font-awesome-icon icon="fa-solid fa-user" /></button>
+        </div>
       </nav>
     </div>
   </header>
 
-  <RouterView />
+  <img src="./img/loading.gif" alt="Loading" />
+
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
 nav {
-  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav button span {
   font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+}
+
+nav button {
+  color: var(--ds-text-subtle);
+  font-weight: 600;
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+}
+
+.nav-left button:hover {
+  cursor: pointer;
+  background-color: var(--header-button-hovered);
+  border-radius: 5px;
+}
+
+.nav-right button:hover {
+  cursor: pointer;
+  background-color: var(--header-button-hovered);
+  border-radius: 50%;
 }
 
 nav a.router-link-exact-active {

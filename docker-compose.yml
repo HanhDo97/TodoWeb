@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  todo_web:
+    container_name: todo_web
+    build: .
+    ports:
+      - 5173:5173
+    volumes:
+      - .:/app
