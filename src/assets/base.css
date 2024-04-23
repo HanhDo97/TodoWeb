@@ -34,6 +34,10 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+
+  --ds-text-subtle: #9FADBC;
+  --ds-link: #579DFF;
+  --header-button-hovered: #A6C5E229;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -55,7 +59,6 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
 }
 
 body {
