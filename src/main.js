@@ -11,7 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faBars, faBell, faChartSimple, faChevronDown, faList, faMagnifyingGlass, faPlus, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBell, faChartSimple, faChevronDown, faChevronRight, faList, faMagnifyingGlass, faPlus, faUser } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faList)
@@ -21,6 +21,7 @@ library.add(faBell)
 library.add(faUser)
 library.add(faPlus)
 library.add(faChevronDown)
+library.add(faChevronRight)
 library.add(faChartSimple)
 
 const app = createApp(App)
