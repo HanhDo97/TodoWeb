@@ -25,6 +25,7 @@
 nav {
     display: flex;
     justify-content: space-between;
+    padding: 5px;
 }
 
 nav button span {
@@ -53,6 +54,6 @@ nav button {
 .nav-right button:hover {
     cursor: pointer;
     background-color: var(--header-button-hovered);
-    border-radius: 50%;
+    /* border-radius: 40%; */
 }
 </style>
