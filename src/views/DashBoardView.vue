@@ -8,36 +8,23 @@ let hiddenNav = ref(true);
 
 function handleToggleNav(hidden) {
     hiddenNav.value = hidden;
+    console.log(hiddenNav.value)
 }
 </script>
 <template>
     <header>
         <NavTop />
     </header>
-    <main :style="{ gridTemplateColumns: hiddenNav ? '10px 1fr' : '' }">
+    <main>
         <NavSlide @toggle-nav-btn="handleToggleNav" />
-        <TableDashBoard />
+        <TableDashBoard :hiddenNav="hiddenNav" :key="hiddenNav" />
     </main>
 </template>
 <style>
 main {
-    display: grid;
+    position: relative;
     min-height: 100vh;
-    grid-template-columns: 1fr 1fr;
-}
-
-@media (min-width: 700px) {
-    main {
-        display: grid;
-        grid-template-columns: 250px 1fr;
-    }
-}
-
-@media (min-width: 900px) {
-    main {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-    }
+    overflow: hidden;
 }
 
 header {

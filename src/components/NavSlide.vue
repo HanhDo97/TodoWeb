@@ -60,7 +60,7 @@
 <style scoped>
 .slide-leave,
 .slide-enter {
-    transition: transform 6s ease;
+    transition: transform 1s ease;
 }
 
 .slide-leave-to {
@@ -68,11 +68,11 @@
 }
 
 .slide-leave-from {
-    transform: translateX(-80%);
+    transform: translateX(-90%);
 }
 
 .slide-enter-from {
-    transform: translateX(-80%);
+    transform: translateX(-90%);
 }
 
 .slide-enter-to {
@@ -124,10 +124,11 @@ li:hover {
 
 .nav-slide-warrper {
     height: 100%;
-    width: 100%;
-    position: relative;
+    width: 250px;
+    position: absolute;
     transition: 0.5s;
     /* background-color: blue; */
+    z-index: 10;
 }
 
 .expand-nav-left {
