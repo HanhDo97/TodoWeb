@@ -22,18 +22,18 @@ const list = ref([
         id: 1,
         listName: 'Planning',
         todos: [
-            { taskId: 1, taskName: 'Project Planning', editMode: false },
-            { taskId: 2, taskName: 'Sprint Planning', editMode: false },
-            { taskId: 3, taskName: 'Metting Planning', editMode: false },
-            { taskId: 4, taskName: 'Deploy Planning', editMode: false }
+            { taskId: 1, taskName: 'Project Planning'},
+            { taskId: 2, taskName: 'Sprint Planning'},
+            { taskId: 3, taskName: 'Metting Planning'},
+            { taskId: 4, taskName: 'Deploy Planning'}
         ]
     },
     {
         id: 2,
         listName: 'Doing',
         todos: [
-            { taskId: 5, taskName: 'Project Doing', editMode: false },
-            { taskId: 6, taskName: 'Sprint Doing', editMode: false }
+            { taskId: 5, taskName: 'Project Doing'},
+            { taskId: 6, taskName: 'Sprint Doing'}
         ]
     }
 ]);
@@ -45,9 +45,7 @@ function getReponsiveWidth() {
     }
     return window.innerWidth - 51;
 }
-function enableEditMode(list, indexTask, taskId) {
-    list[indexTask].editMode = true;
-
+function enableEditMode(list, indexTask, taskId, event) {
     opacityDashBoard.value = true;
 
     editTask.value = list[indexTask];
@@ -62,6 +60,7 @@ function enableEditMode(list, indexTask, taskId) {
     wrapperRect.value = wrapperDomRect;
     showEditTextArea.value = true;
 
+    event.stopPropagation();
 }
 function disableEditMode() {
     opacityDashBoard.value = false;
@@ -70,6 +69,22 @@ onMounted(() => {
     window.addEventListener('resize', () => {
         todoDashBoardWidth.value = getReponsiveWidth();
     })
+
+    window.addEventListener('click', function (event) {
+        let todoEditElement = document.getElementsByClassName('todo-edit')[0];
+        if (
+            todoEditElement !== undefined
+            && todoEditElement.contains(event.target) == false
+            && showEditTextArea.value
+            && opacityDashBoard.value
+        ) {
+            showEditTextArea.value = false;
+            disableEditMode();
+        }
+    })
+
+
+
 })
 
 </script>
@@ -77,7 +92,7 @@ onMounted(() => {
 <template>
     <div class="table-dashboard-wrapper" :class="[!hiddenNav ? 'slide-right slide-right-from' : 'slide-right-to']">
         <TodoEdit :editTask="editTask" :textAreaRect="textAreaRect" :wrapperDomRect="wrapperRect"
-            v-if="showEditTextArea" :key="editTask.taskId" />
+            v-if="showEditTextArea" :key="editTask.taskId" class="todo-edit" />
         <ProjectAbout />
         <div class="todo-dashboard" :style="{ width: todoDashBoardWidth + 'px' }">
             <div v-for="(todoList, listIndex) in list" :key="listIndex" class="todo-list"
@@ -92,7 +107,8 @@ onMounted(() => {
                                     <slot v-bind="element">
                                         <p>
                                             <span>{{ element.taskName }}</span>
-                                            <button @click="enableEditMode(todoList.todos, index, element.taskId)">
+                                            <button
+                                                @click="enableEditMode(todoList.todos, index, element.taskId, $event)">
                                                 <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
                                             </button>
                                         </p>

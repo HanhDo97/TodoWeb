@@ -7,8 +7,6 @@ const top = computed(() => props.textAreaRect.top - props.wrapperDomRect.top);
 const left = computed(() => props.textAreaRect.left - props.wrapperDomRect.left);
 const width = props.textAreaRect.width;
 
-console.log(props.editTask);
-
 onMounted(() => {
     let textarea = document.getElementsByName('todo-task-edit')[0];
     textarea.focus();
