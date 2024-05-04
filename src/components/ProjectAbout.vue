@@ -1,5 +1,11 @@
+<script setup>
+import { ref, defineProps } from 'vue';
+const props = defineProps(['hiddenNav']);
+const hiddenNav = props.hiddenNav;
+</script>
+
 <template>
-    <div class="project-about-wrapper">
+    <div class="project-about-wrapper" :style="{ width: hiddenNav ? '100%' : 'calc(100% - 250px)' }">
         <div class="about-left">
             <button>
                 <h3>Todo Project</h3>
@@ -10,7 +16,7 @@
             <button>
                 <font-awesome-icon icon="fa-solid fa-users-rays" />
             </button>
-            <button>
+            <button class="highlight-btn">
                 Board <font-awesome-icon icon="fa-solid fa-chevron-down" />
             </button>
         </div>
@@ -19,7 +25,7 @@
             <button><font-awesome-icon icon="fa-solid fa-bolt-lightning" /></button>
             <button><font-awesome-icon icon="fa-solid fa-filter" /></button>
             |
-            <button><font-awesome-icon icon="fa-solid fa-user-plus" /> Share</button>
+            <button class="highlight-btn"><font-awesome-icon icon="fa-solid fa-user-plus" /> Share</button>
             <button><font-awesome-icon icon="fa-solid fa-ellipsis" /></button>
         </div>
     </div>
@@ -31,6 +37,17 @@
 
 .about-left {
     display: inline-block
+}
+
+.highlight-btn {
+    background-color: rgb(255, 255, 255, 0.8) !important;
+    color: black !important;
+    border-radius: 5px !important;
+    font-size: 14px !important;
+}
+
+.highlight-btn:hover {
+    background-color: whitesmoke !important;
 }
 
 .about-left button,
@@ -55,7 +72,6 @@
 
 .project-about-wrapper {
     min-height: 80px;
-    width: 100%;
     background-color: rgb(255, 255, 255, 0.1);
     padding: 20px;
 

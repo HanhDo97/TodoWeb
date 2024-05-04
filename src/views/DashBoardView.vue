@@ -8,7 +8,6 @@ let hiddenNav = ref(true);
 
 function handleToggleNav(hidden) {
     hiddenNav.value = hidden;
-    console.log(hiddenNav.value)
 }
 </script>
 <template>

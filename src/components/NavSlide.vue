@@ -172,7 +172,7 @@ li:hover {
 <script setup>
 import { ref, defineEmits } from 'vue';
 
-const emit = defineEmits(['toggleNavBtn']); // Define the custom event
+const emit = defineEmits(['toggleNavBtn']);
 
 let hidden = ref(true);
 

@@ -3,6 +3,7 @@ import { ref, defineProps, onMounted } from 'vue';
 import ProjectAbout from './ProjectAbout.vue';
 import TodoList from './TodoList.vue';
 import TodoEdit from './TodoEdit.vue';
+import TodoAddNewCard from './TodoAddNewCard.vue';
 import draggable from "vuedraggable/dist/vuedraggable.common";
 
 const props = defineProps(['hiddenNav']);
@@ -22,19 +23,21 @@ const list = ref([
         id: 1,
         listName: 'Planning',
         todos: [
-            { taskId: 1, taskName: 'Project Planning'},
-            { taskId: 2, taskName: 'Sprint Planning'},
-            { taskId: 3, taskName: 'Metting Planning'},
-            { taskId: 4, taskName: 'Deploy Planning'}
-        ]
+            { taskId: 1, taskName: 'Project Planning' },
+            { taskId: 2, taskName: 'Sprint Planning' },
+            { taskId: 3, taskName: 'Metting Planning' },
+            { taskId: 4, taskName: 'Deploy Planning' }
+        ],
+        addNewCardStatus: false
     },
     {
         id: 2,
         listName: 'Doing',
         todos: [
-            { taskId: 5, taskName: 'Project Doing'},
-            { taskId: 6, taskName: 'Sprint Doing'}
-        ]
+            { taskId: 5, taskName: 'Project Doing' },
+            { taskId: 6, taskName: 'Sprint Doing' }
+        ],
+        addNewCardStatus: false
     }
 ]);
 let todoDashBoardWidth = ref(getReponsiveWidth());
@@ -82,9 +85,6 @@ onMounted(() => {
             disableEditMode();
         }
     })
-
-
-
 })
 
 </script>
@@ -93,7 +93,7 @@ onMounted(() => {
     <div class="table-dashboard-wrapper" :class="[!hiddenNav ? 'slide-right slide-right-from' : 'slide-right-to']">
         <TodoEdit :editTask="editTask" :textAreaRect="textAreaRect" :wrapperDomRect="wrapperRect"
             v-if="showEditTextArea" :key="editTask.taskId" class="todo-edit" />
-        <ProjectAbout />
+        <ProjectAbout :hiddenNav="hiddenNav" :key="hiddenNav" />
         <div class="todo-dashboard" :style="{ width: todoDashBoardWidth + 'px' }">
             <div v-for="(todoList, listIndex) in list" :key="listIndex" class="todo-list"
                 :class="{ 'opacity': opacityDashBoard }">
@@ -117,13 +117,18 @@ onMounted(() => {
                             </div>
                         </template>
                     </draggable>
+
+                    <TodoAddNewCard :list="todoList" />
                 </todo-list>
+
+
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+
 .opacity {
     opacity: 0.1;
     z-index: 0;
@@ -179,6 +184,7 @@ onMounted(() => {
     overflow-y: hidden;
     height: calc(100% - 1rem);
     position: relative;
+    color: rgb(226, 226, 226)
 }
 
 .todo-list {

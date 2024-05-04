@@ -7,6 +7,12 @@
             <button>
                 <span class="chart-icon"><font-awesome-icon icon="fa-solid fa-chart-simple" /></span>
                 ToDoApp</button>
+            <button>Workspace <span>
+                    <font-awesome-icon icon="fa-solid fa-chevron-down" />
+                </span></button>
+            <button>Recent <span>
+                    <font-awesome-icon icon="fa-solid fa-chevron-down" />
+                </span></button>
             <button>More <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
@@ -43,17 +49,14 @@ nav button {
     border: none;
     font-size: 16px;
     padding: 10px;
+    height:45px;
+    min-width: 45px;
 }
 
-.nav-left button:hover {
+nav button:hover {
     cursor: pointer;
     background-color: var(--header-button-hovered);
     border-radius: 5px;
 }
 
-.nav-right button:hover {
-    cursor: pointer;
-    background-color: var(--header-button-hovered);
-    /* border-radius: 40%; */
-}
 </style>
