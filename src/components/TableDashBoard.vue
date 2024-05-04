@@ -18,6 +18,7 @@ const textAreaRect = ref({
 })
 const wrapperRect = ref(null);
 const editTask = ref(null)
+let todoDashBoardWidth = ref(getReponsiveWidth());
 const list = ref([
     {
         id: 1,
@@ -40,8 +41,24 @@ const list = ref([
         addNewCardStatus: false
     }
 ]);
-let todoDashBoardWidth = ref(getReponsiveWidth());
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        todoDashBoardWidth.value = getReponsiveWidth();
+    })
 
+    window.addEventListener('click', function (event) {
+        let todoEditElement = document.getElementsByClassName('todo-edit')[0];
+        if (
+            todoEditElement !== undefined
+            && todoEditElement.contains(event.target) == false
+            && showEditTextArea.value
+            && opacityDashBoard.value
+        ) {
+            showEditTextArea.value = false;
+            disableEditMode();
+        }
+    })
+})
 function getReponsiveWidth() {
     if (!hiddenNav) {
         return window.innerWidth - 265;
@@ -68,25 +85,26 @@ function enableEditMode(list, indexTask, taskId, event) {
 function disableEditMode() {
     opacityDashBoard.value = false;
 }
-onMounted(() => {
-    window.addEventListener('resize', () => {
-        todoDashBoardWidth.value = getReponsiveWidth();
-    })
 
-    window.addEventListener('click', function (event) {
-        let todoEditElement = document.getElementsByClassName('todo-edit')[0];
-        if (
-            todoEditElement !== undefined
-            && todoEditElement.contains(event.target) == false
-            && showEditTextArea.value
-            && opacityDashBoard.value
-        ) {
-            showEditTextArea.value = false;
-            disableEditMode();
+// function determine which list is on add new card
+function onAddNewCardId(id) {
+    list.value.forEach((el) => {
+        if (el.id == id) {
+            el.addNewCardStatus = true;
+        } else {
+            el.addNewCardStatus = false;
         }
     })
-})
+}
 
+function onAddNewCardValue(payload){
+    let task = {
+        taskId: 123,
+        taskName: payload.value
+    }
+    let listIndex = list.value.findIndex((el)=> el.id == payload.id);
+    list.value[listIndex].todos.push(task)
+}
 </script>
 
 <template>
@@ -118,7 +136,7 @@ onMounted(() => {
                         </template>
                     </draggable>
 
-                    <TodoAddNewCard :list="todoList" />
+                    <TodoAddNewCard :list="todoList" @add-new-card-id="onAddNewCardId" @add-new-card-value="onAddNewCardValue" />
                 </todo-list>
 
 
@@ -128,7 +146,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .opacity {
     opacity: 0.1;
     z-index: 0;

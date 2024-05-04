@@ -5,13 +5,15 @@ const list = props.list;
 const textVal = ref('');
 const textareaElement = ref(undefined);
 const addNewCardWrapperName = 'add-new-card-wrapper-' + list.id;
+const todoAddcardName = 'todo-add-card-' + list.id;
+const emit = defineEmits(['addNewCardId', 'addNewCardValue']);
+
 onUpdated(() => {
-    textareaElement.value = document.getElementsByName('todo-add-card')[0];
+    textareaElement.value = document.getElementsByName(todoAddcardName)[0];
     if (textareaElement.value !== undefined) {
         textareaElement.value.focus();
 
         window.addEventListener('click', clickHandler)
-        // textareaElement.addEventListener('blur', hideAddNewCardTemplate);
     }
     else {
         window.removeEventListener('click', clickHandler);
@@ -24,11 +26,14 @@ function clickHandler(event) {
     if (
         newCardWrapper !== undefined && !newCardWrapper.contains(event.target)
     ) {
+        console.log('out of div');
         hideAddNewCardTemplate();
+        textVal.value = '';
     }
 }
 function displayAddNewCardTemplate(ev) {
-    list.addNewCardStatus = true;
+    // emit to the parent so the parent know which list does the user click
+    emit('addNewCardId', list.id);
 
     ev.stopPropagation();
 }
@@ -36,14 +41,23 @@ function hideAddNewCardTemplate() {
     list.addNewCardStatus = false;
 }
 function saveTextVal() {
-    console.log(textVal);
+    let payload = {
+        id: list.id,
+        value: textVal.value,
+    }
+
+    emit('addNewCardValue', payload);
+
+    textVal.value = '';
+
+    textareaElement.value.focus();
 };
 
 </script>
 <template>
     <div :name="addNewCardWrapperName">
         <div v-if="list.addNewCardStatus" class="textarea-add-card">
-            <textarea v-bind="textVal" class="textarea" name="todo-add-card" id="" cols="30" rows="2"></textarea>
+            <textarea v-model="textVal" class="textarea" :name="todoAddcardName" id="" cols="30" rows="2"></textarea>
         </div>
 
         <div class="todo-action">
@@ -53,7 +67,7 @@ function saveTextVal() {
                 a card</button>
             <button v-if="!list.addNewCardStatus"><font-awesome-icon icon="fa-solid fa-image" /></button>
 
-            <button v-if="list.addNewCardStatus" @click="saveTextVal">Save</button>
+            <button v-if="list.addNewCardStatus" @click="saveTextVal($event)">Save</button>
             <button v-if="list.addNewCardStatus" @click="() => list.addNewCardStatus = false"><font-awesome-icon
                     icon="fa-solid fa-xmark" /></button>
         </div>
