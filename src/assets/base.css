@@ -23,7 +23,7 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: #181818;
+  --color-background: #2f6128;
   --color-background-soft: #222222;
   --color-background-mute: #282828;
 
@@ -35,7 +35,7 @@
 
   --section-gap: 160px;
 
-  --ds-text-subtle: #9FADBC;
+  --ds-text-subtle: rgb(226, 226, 226);
   --ds-link: #579DFF;
   --header-button-hovered: #A6C5E229;
   --font-family: -apple-system,
@@ -72,6 +72,7 @@
 
 body {
   min-height: 100vh;
+  overflow: hidden;
   color: var(--color-text);
   background: var(--color-background);
   transition:

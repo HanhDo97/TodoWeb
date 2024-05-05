@@ -1,3 +1,36 @@
+<script setup>
+import { ref } from 'vue';
+import Workspace from './nav/Workspace.vue';
+import Recent from './nav/Recent.vue';
+
+const navNavigator = ref({
+    workspace: {
+        display: false,
+        bottom: '-30px',
+        left: '0px'
+    },
+    recent: {
+        display: false,
+        bottom: '-30px',
+        left: '0px'
+    },
+
+});
+
+function displayNavInformation(nav) {
+    for (let key in navNavigator.value) {
+        if (nav == key) {
+            navNavigator.value[key].display = true;
+        }
+        else {
+            navNavigator.value[key].display = false;
+        }
+    }
+
+    let btnRectElement = document.getElementsByName(nav + '-btn')[0].getBoundingClientRect();
+    navNavigator.value[nav].left = btnRectElement.left + 'px';
+}
+</script>
 <template>
     <nav>
         <div class="nav-left">
@@ -7,10 +40,10 @@
             <button>
                 <span class="chart-icon"><font-awesome-icon icon="fa-solid fa-chart-simple" /></span>
                 ToDoApp</button>
-            <button>Workspace <span>
+            <button @click="displayNavInformation('workspace')" name="workspace-btn">Workspace <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
-            <button>Recent <span>
+            <button @click="displayNavInformation('recent')" name="recent-btn">Recent <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
             <button>More <span>
@@ -19,19 +52,72 @@
             <button><font-awesome-icon icon="fa-solid fa-plus" /></button>
         </div>
         <div class="nav-right">
-            <button>
-                <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
-            </button>
+            <div class="search-wrapper">
+                <div class="icon-wrapper"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></div>
+                <input type="text" placeholder="Search">
+            </div>
             <button><font-awesome-icon icon="fa-solid fa-bell" /></button>
             <button><font-awesome-icon icon="fa-solid fa-user" /></button>
         </div>
+
+        <Workspace v-if="navNavigator.workspace.display" :bottom="navNavigator.workspace.bottom"
+            :left="navNavigator.workspace.left" />
+        <Recent v-if="navNavigator.recent.display" :bottom="navNavigator.recent.bottom"
+            :left="navNavigator.recent.left" />
     </nav>
 </template>
 <style scoped>
+.icon-wrapper {
+    font-size: 18px;
+    text-align: center
+}
+
+.search-wrapper {
+    padding: 3px;
+    width: 100%;
+    display: grid;
+    gap: 5px;
+    grid-auto-columns: auto;
+    grid-template-columns: 1fr 10fr;
+    background-color: rgb(255, 255, 255, 0.1);
+    color: var(--ds-text-subtle);
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.search-wrapper:hover {
+    background-color: rgb(255, 255, 255, 0.2)
+}
+
+.search-wrapper input {
+    height: 30px;
+    border: none;
+    background-color: transparent;
+    color: var(--ds-text-subtle)
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border: 1px solid transparent;
+}
+
+::placeholder {
+    color: var(--ds-text-subtle)
+}
+
+.nav-right {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 5px;
+    min-width: 300px;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
     padding: 5px;
+    position: relative;
 }
 
 nav button span {
@@ -49,7 +135,7 @@ nav button {
     border: none;
     font-size: 16px;
     padding: 10px;
-    height:45px;
+    height: 45px;
     min-width: 45px;
 }
 
@@ -58,5 +144,4 @@ nav button:hover {
     background-color: var(--header-button-hovered);
     border-radius: 5px;
 }
-
 </style>

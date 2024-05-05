@@ -58,6 +58,10 @@
 </template>
 
 <style scoped>
+.nav-slide-warrper p{
+    color: rgb(226, 226, 226);
+}
+
 .slide-leave,
 .slide-enter {
     transition: transform 1s ease;
@@ -158,7 +162,7 @@ li:hover {
     width: 30px;
     height: 30px;
     position: absolute;
-    top: 10px;
+    top: 45px;
     right: -20px;
 }
 

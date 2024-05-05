@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import ProjectAbout from './ProjectAbout.vue';
 import TodoList from './TodoList.vue';
 import TodoEdit from './TodoEdit.vue';

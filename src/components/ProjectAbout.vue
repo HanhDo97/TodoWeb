@@ -5,7 +5,7 @@ const hiddenNav = props.hiddenNav;
 </script>
 
 <template>
-    <div class="project-about-wrapper" :style="{ width: hiddenNav ? '100%' : 'calc(100% - 250px)' }">
+    <div class="project-about-wrapper" :style="{ width: hiddenNav ? '98%' : 'calc(100% - 250px)' }">
         <div class="about-left">
             <button>
                 <h3>Todo Project</h3>
@@ -71,9 +71,9 @@ const hiddenNav = props.hiddenNav;
 }
 
 .project-about-wrapper {
-    min-height: 80px;
+    min-height: 59px;
     background-color: rgb(255, 255, 255, 0.1);
-    padding: 20px;
+    padding: 5px;
 
 }
 
