@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import Workspace from './nav/Workspace.vue';
 import Recent from './nav/Recent.vue';
+import More from './nav/More.vue';
 
 const navNavigator = ref({
     workspace: {
@@ -10,6 +11,11 @@ const navNavigator = ref({
         top: '55px'
     },
     recent: {
+        display: false,
+        left: '0px',
+        top: '55px'
+    },
+    more: {
         display: false,
         left: '0px',
         top: '55px'
@@ -26,7 +32,6 @@ function displayNavInformation(nav) {
             navNavigator.value[key].display = false;
         }
     }
-
     let btnRectElement = document.getElementsByName(nav + '-btn')[0].getBoundingClientRect();
     navNavigator.value[nav].left = btnRectElement.left + 'px';
 }
@@ -54,7 +59,7 @@ function onClickOutSide(isClickOutSide) {
             <button @click="displayNavInformation('recent')" name="recent-btn" class="recent-btn">Recent <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
-            <button>More <span>
+            <button name="more-btn" @click="displayNavInformation('more')">More <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
             <button><font-awesome-icon icon="fa-solid fa-plus" /></button>
@@ -71,6 +76,9 @@ function onClickOutSide(isClickOutSide) {
         <Workspace v-if="navNavigator.workspace.display" :top="navNavigator.workspace.top"
             :left="navNavigator.workspace.left" @on-click-out-side="onClickOutSide" />
         <Recent v-if="navNavigator.recent.display" :top="navNavigator.recent.top" :left="navNavigator.recent.left"
+            @on-click-out-side="onClickOutSide" />
+
+        <More v-if="navNavigator.more.display" :top="navNavigator.more.top" :left="navNavigator.more.left"
             @on-click-out-side="onClickOutSide" />
     </nav>
 </template>
