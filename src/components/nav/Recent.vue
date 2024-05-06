@@ -7,6 +7,11 @@ const left = props.left;
 const showSlideDown = ref(false);
 const navRecentWrapperEle = ref(null);
 const emit = defineEmits(['onClickOutSide'])
+const hoverIndex = ref(null);
+const projects = ref([
+    { name: 'Your Project', description: 'Todo Workspace' },
+    { name: 'Your Project 02', description: 'Todo Workspace' }
+]);
 
 onMounted(() => {
     setTimeout(() => {
@@ -26,7 +31,7 @@ function handleClick(ev) {
     }
 }
 
-function clickProject(){
+function clickProject() {
     console.log(123);
 }
 </script>
@@ -35,27 +40,30 @@ function clickProject(){
     <div name="nav-recent-wrapper" :class="{ 'nav-recent-wrapper': true, 'slide-down': showSlideDown }"
         :style="{ 'top': top, 'left': left }">
         <div class="recent-wrapper">
-            <div @click="clickProject" class="recent-content">
+            <div v-for="(project, index) in projects" :key="index" class="recent-content"
+                @mouseenter="hoverIndex = index" @mouseleave="hoverIndex = null" @click="clickProject(project)">
                 <div class="image-container">
                     <img src="/src/assets/logo.svg" alt="">
                 </div>
                 <div class="recent-text">
-                    <p>Your Project <br><small>Todo Workspace</small></p>
+                    <p>{{ project.name }}<br><small>{{ project.description }}</small></p>
+                </div>
+                <div class="start-container" :style="{ 'opacity': hoverIndex === index ? '1' : '' }">
+                    <font-awesome-icon icon="fa-solid fa-star" />
                 </div>
             </div>
-            <div class="recent-content">
-                <div class="image-container">
-                    <img src="/src/assets/logo.svg" alt="">
-                </div>
-                <div class="recent-text">
-                    <p>Your Project <br><small>Todo Workspace</small></p>
-                </div>
-            </div>
+
         </div>
     </div>
 </template>
 
 <style scoped>
+.start-container {
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.3s;;
+}
+
 .recent-content {
     display: flex;
     margin-bottom: 10px;
@@ -63,14 +71,18 @@ function clickProject(){
     padding: 10px;
 
 }
+
 .recent-content p {
     line-height: 14px;
 }
-.recent-content:hover{
+
+.recent-content:hover {
     cursor: pointer;
     background-color: #5b8d53;
     border-radius: 5px;
+    color: whitesmoke;
 }
+
 .recent-wrapper {
     padding: 10px;
 }
@@ -86,7 +98,7 @@ function clickProject(){
 .nav-recent-wrapper {
     width: 300px;
     position: absolute;
-    z-index: 10;
+    z-index: 100;
     background-color: whitesmoke;
     color: black;
     box-shadow: 0px 2px 6px 0 rgba(0, 0, 0, 0.25);

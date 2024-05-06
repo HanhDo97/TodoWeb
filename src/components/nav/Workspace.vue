@@ -107,7 +107,7 @@ function handleClick(ev) {
 .nav-workspace-wrapper {
     width: 300px;
     position: absolute;
-    z-index: 10;
+    z-index: 100;
     background-color: whitesmoke;
     color: black;
     box-shadow: 0px 2px 6px 0 rgba(0, 0, 0, 0.25);
