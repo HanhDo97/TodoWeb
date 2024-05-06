@@ -20,7 +20,7 @@ const navNavigator = ref({
 function displayNavInformation(nav) {
     for (let key in navNavigator.value) {
         if (nav == key) {
-            navNavigator.value[key].display = true;
+            navNavigator.value[key].display = !navNavigator.value[key].display;
         }
         else {
             navNavigator.value[key].display = false;
@@ -29,6 +29,14 @@ function displayNavInformation(nav) {
 
     let btnRectElement = document.getElementsByName(nav + '-btn')[0].getBoundingClientRect();
     navNavigator.value[nav].left = btnRectElement.left + 'px';
+}
+
+function onClickOutSide(isClickOutSide) {
+    if (isClickOutSide) {
+        for (let key in navNavigator.value) {
+            navNavigator.value[key].display = false;
+        }
+    }
 }
 </script>
 <template>
@@ -61,8 +69,9 @@ function displayNavInformation(nav) {
         </div>
 
         <Workspace v-if="navNavigator.workspace.display" :top="navNavigator.workspace.top"
-            :left="navNavigator.workspace.left" />
-        <Recent v-if="navNavigator.recent.display" :top="navNavigator.recent.top" :left="navNavigator.recent.left" />
+            :left="navNavigator.workspace.left" @on-click-out-side="onClickOutSide" />
+        <Recent v-if="navNavigator.recent.display" :top="navNavigator.recent.top" :left="navNavigator.recent.left"
+            @on-click-out-side="onClickOutSide" />
     </nav>
 </template>
 <style scoped>

@@ -1,18 +1,35 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUpdated } from 'vue';
 const props = defineProps(['bottom', 'left', 'top']);
+const emit = defineEmits(['onClickOutSide']);
 const top = props.top;
 const left = props.left;
 const showSlideDown = ref(false);
+const navWorkSpaceWrapperEle = ref(null);
 
 onMounted(() => {
     setTimeout(() => {
         showSlideDown.value = true;
     }, 0);
 });
+onUpdated(() => {
+    navWorkSpaceWrapperEle.value = document.getElementsByName('nav-workspace-wrapper')[0];
+    window.addEventListener('click', handleClick);
+})
+
+function handleClick(ev) {
+    if (navWorkSpaceWrapperEle.value !== undefined && navWorkSpaceWrapperEle.value.contains(ev.target)) {
+        console.log('in side');
+    }
+    else {
+        emit('onClickOutSide', true);
+        window.removeEventListener('click', handleClick)
+    }
+}
 </script>
 <template>
-    <div :class="{ 'nav-workspace-wrapper': true, 'slide-down': showSlideDown }" :style="{ 'top': top, 'left': left }">
+    <div name="nav-workspace-wrapper" :class="{ 'nav-workspace-wrapper': true, 'slide-down': showSlideDown }"
+        :style="{ 'top': top, 'left': left }">
         <div class="workspace-title">Workspaces</div>
         <div class="workspace-wrapper">
             <h5>Current Workspace</h5>
@@ -53,11 +70,12 @@ onMounted(() => {
     background-color: transparent;
     padding: 5px;
     font-size: 15px;
+    align-items: center;
 }
 
 .workspace-btn-content:hover {
     cursor: pointer;
-    background-color: rgb(124, 115, 115);
+    background-color: #5b8d53;
     border-radius: 5px;
     color: whitesmoke;
 }
@@ -66,6 +84,8 @@ onMounted(() => {
     width: 35px;
     height: auto;
     margin-right: 1rem;
+    display: flex;
+    align-items: center;
 }
 
 .workspace-wrapper {
