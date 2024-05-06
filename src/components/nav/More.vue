@@ -34,9 +34,7 @@ onUpdated(() => {
 function handleClick(ev) {
     if (navMoreWrapperEle.value !== undefined && navMoreWrapperEle.value.contains(ev.target)) { /* empty */ }
     else {
-        console.log('out side')
-        emit('onClickOutSide', true);
-        window.removeEventListener('click', handleClick)
+        closeNavInformation();
     }
 }
 function displayChildren(action, event) {
@@ -45,6 +43,19 @@ function displayChildren(action, event) {
     displayActions.value = false;
 
     event.stopPropagation();
+}
+
+function backToActionMenu(action) {
+    displayActions.value = true;
+
+    action.displayChildren = false;
+
+    event.stopPropagation();
+
+}
+function closeNavInformation() {
+    emit('onClickOutSide', true);
+    window.removeEventListener('click', handleClick)
 }
 </script>
 <template>
@@ -62,12 +73,13 @@ function displayChildren(action, event) {
         <Transition name="starred-boards">
             <div v-if="!displayActions && actions.star.displayChildren" class="more-board">
                 <div class="title-boards">
-                    <button><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
-                    <p>{{ actions.star.title }}</p>
-                    <button><font-awesome-icon icon="fa-solid fa-xmark" /></button>
+                    <button @click="backToActionMenu(actions.star)"><font-awesome-icon
+                            icon="fa-solid fa-chevron-left" /></button>
+                    <p><b>{{ actions.star.title }}</b></p>
+                    <button @click="closeNavInformation"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
                 </div>
                 <div class="content-boards">
-
+                    <img src="/src/assets/no-starred.png" alt="">
                 </div>
                 <div class="footer-boards">
                     <p>Star important boards to access them quickly and easily.</p>
@@ -78,14 +90,16 @@ function displayChildren(action, event) {
 </template>
 
 <style scoped>
-.more-board .content-boards{
-    min-height: 150px;
+.content-boards img {
+    width: 100%;
 }
+
 .more-board .footer-boards,
 .more-board .title-boards,
 .more-board .content-boards {
     padding: 10px;
 }
+
 .more-board .title-boards button {
     border: none;
     width: 32px;
@@ -120,9 +134,12 @@ function displayChildren(action, event) {
     transition: transform 0.5s ease;
 }
 
-.actions-enter-from,
-.starred-boards-enter-from {
+.actions-enter-from {
     transform: translateY(-20%);
+}
+
+.starred-boards-enter-from {
+    transform: translateY(-5%);
 }
 
 .more-menu {
