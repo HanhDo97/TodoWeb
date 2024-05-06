@@ -23,9 +23,9 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: #2f6128;
+  --color-background-soft: #222222;
+  --color-background-mute: #282828;
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
@@ -35,9 +35,18 @@
 
   --section-gap: 160px;
 
-  --ds-text-subtle: #9FADBC;
+  --ds-text-subtle: rgb(226, 226, 226);
   --ds-link: #579DFF;
   --header-button-hovered: #A6C5E229;
+  --font-family: -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Noto Sans',
+    'Ubuntu',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,25 +72,14 @@
 
 body {
   min-height: 100vh;
+  overflow: hidden;
   color: var(--color-text);
   background: var(--color-background);
   transition:
     color 0.5s,
     background-color 0.5s;
   line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family);
   font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
