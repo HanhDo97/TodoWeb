@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const props = defineProps(['textAreaRect', 'wrapperDomRect', 'editTask']);
 

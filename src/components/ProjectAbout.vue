@@ -1,5 +1,4 @@
 <script setup>
-import { ref, defineProps } from 'vue';
 const props = defineProps(['hiddenNav']);
 const hiddenNav = props.hiddenNav;
 </script>

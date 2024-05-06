@@ -6,13 +6,13 @@ import Recent from './nav/Recent.vue';
 const navNavigator = ref({
     workspace: {
         display: false,
-        bottom: '-30px',
-        left: '0px'
+        left: '0px',
+        top: '55px'
     },
     recent: {
         display: false,
-        bottom: '-30px',
-        left: '0px'
+        left: '0px',
+        top: '55px'
     },
 
 });
@@ -43,7 +43,7 @@ function displayNavInformation(nav) {
             <button @click="displayNavInformation('workspace')" name="workspace-btn">Workspace <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
-            <button @click="displayNavInformation('recent')" name="recent-btn">Recent <span>
+            <button @click="displayNavInformation('recent')" name="recent-btn" class="recent-btn">Recent <span>
                     <font-awesome-icon icon="fa-solid fa-chevron-down" />
                 </span></button>
             <button>More <span>
@@ -60,10 +60,9 @@ function displayNavInformation(nav) {
             <button><font-awesome-icon icon="fa-solid fa-user" /></button>
         </div>
 
-        <Workspace v-if="navNavigator.workspace.display" :bottom="navNavigator.workspace.bottom"
+        <Workspace v-if="navNavigator.workspace.display" :top="navNavigator.workspace.top"
             :left="navNavigator.workspace.left" />
-        <Recent v-if="navNavigator.recent.display" :bottom="navNavigator.recent.bottom"
-            :left="navNavigator.recent.left" />
+        <Recent v-if="navNavigator.recent.display" :top="navNavigator.recent.top" :left="navNavigator.recent.left" />
     </nav>
 </template>
 <style scoped>

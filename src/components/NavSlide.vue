@@ -116,7 +116,6 @@ li:hover {
     width: 35px;
     height: auto;
     margin-right: 1rem;
-
 }
 
 .user-workspace {
@@ -174,7 +173,7 @@ li:hover {
 </style>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 
 const emit = defineEmits(['toggleNavBtn']);
 
