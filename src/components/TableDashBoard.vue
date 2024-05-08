@@ -65,12 +65,12 @@ function getReponsiveWidth() {
     }
     return window.innerWidth - 51;
 }
-function enableEditMode(list, indexTask, taskId, event) {
+function enableEditMode(list, task, event) {
     opacityDashBoard.value = true;
 
-    editTask.value = list[indexTask];
+    editTask.value = task;
 
-    let todoTask = document.getElementById('todo-task-' + taskId);
+    let todoTask = document.getElementById('todo-task-' + task.taskId);
     let wrapper = document.getElementsByClassName('table-dashboard-wrapper');
     let wrapperDomRect = wrapper[0].getBoundingClientRect();
     let domRect = todoTask.getBoundingClientRect();
@@ -97,12 +97,12 @@ function onAddNewCardId(id) {
     })
 }
 
-function onAddNewCardValue(payload){
+function onAddNewCardValue(payload) {
     let task = {
         taskId: 123,
         taskName: payload.value
     }
-    let listIndex = list.value.findIndex((el)=> el.id == payload.id);
+    let listIndex = list.value.findIndex((el) => el.id == payload.id);
     list.value[listIndex].todos.push(task)
 }
 </script>
@@ -111,36 +111,38 @@ function onAddNewCardValue(payload){
     <div class="table-dashboard-wrapper" :class="[!hiddenNav ? 'slide-right slide-right-from' : 'slide-right-to']">
         <TodoEdit :editTask="editTask" :textAreaRect="textAreaRect" :wrapperDomRect="wrapperRect"
             v-if="showEditTextArea" :key="editTask.taskId" class="todo-edit" />
+
         <ProjectAbout :hiddenNav="hiddenNav" :key="hiddenNav" />
-        <div class="todo-dashboard" :style="{ width: todoDashBoardWidth + 'px' }">
-            <div v-for="(todoList, listIndex) in list" :key="listIndex" class="todo-list"
-                :class="{ 'opacity': opacityDashBoard }">
-                <todo-list :todoTitle="todoList.listName">
-                    <draggable v-model="todoList.todos" class="list-group" group="list-group" @start="drag = true"
-                        @end="drag = false" item-key="taskId">
-                        <template #item="{ element, index }">
-                            <div class="">
-                                <div :id="'todo-task-' + element.taskId" class="todo-task"
-                                    @mouseenter="isHovered = true" @mouseleave="isHovered = false">
-                                    <slot v-bind="element">
-                                        <p>
-                                            <span>{{ element.taskName }}</span>
-                                            <button
-                                                @click="enableEditMode(todoList.todos, index, element.taskId, $event)">
-                                                <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
-                                            </button>
-                                        </p>
-                                    </slot>
+
+        <div class="todo-dashboard" :style="{ width: todoDashBoardWidth + 'px' }"
+            :class="{ 'opacity': opacityDashBoard }">
+            <draggable v-model="list" group="list" class="todo-list" item-key="id" :animation="300" handle=".handle">
+                <template #item="{ element: list }">
+                    <todo-list :todoTitle="list.listName">
+                        <draggable v-model="list.todos" class="task-group" :group="{ name: 'tasks' }" item-key="taskId"
+                            :animation="300">
+                            <template #item="{ element: task }">
+                                <div class="">
+                                    <div :id="'todo-task-' + task.taskId" class="todo-task"
+                                        @mouseenter="isHovered = true" @mouseleave="isHovered = false">
+                                        <slot v-bind="task">
+                                            <p>
+                                                <span>{{ task.taskName }}</span>
+                                                <button @click="enableEditMode(list.todos, task, $event)">
+                                                    <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
+                                                </button>
+                                            </p>
+                                        </slot>
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
-                    </draggable>
+                            </template>
+                        </draggable>
 
-                    <TodoAddNewCard :list="todoList" @add-new-card-id="onAddNewCardId" @add-new-card-value="onAddNewCardValue" />
-                </todo-list>
-
-
-            </div>
+                        <TodoAddNewCard :list="list" @add-new-card-id="onAddNewCardId"
+                            @add-new-card-value="onAddNewCardValue" />
+                    </todo-list>
+                </template>
+            </draggable>
         </div>
     </div>
 </template>
@@ -196,17 +198,14 @@ function onAddNewCardValue(payload){
 }
 
 .todo-dashboard {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: calc(100% - 1rem);
     position: relative;
     color: rgb(226, 226, 226)
 }
 
 .todo-list {
     padding: 10px;
-    height: auto;
+    display: flex;
+    gap: 1rem;
 }
 
 .table-dashboard-wrapper {

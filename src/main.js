@@ -11,7 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faCheck, faChevronDown, faChevronLeft, faChevronRight, faClock, faCopy, faEllipsis, faEllipsisVertical, faFilter, faGear, faImage, faList, faMagnifyingGlass, faPencil, faPlus, faRightFromBracket, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faCheck, faChevronDown, faChevronLeft, faChevronRight, faClock, faCopy, faEllipsis, faEllipsisVertical, faFilter, faGear, faGripVertical, faImage, faList, faMagnifyingGlass, faPencil, faPlus, faRightFromBracket, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faList)
@@ -47,6 +47,8 @@ library.add(faBox)
 library.add(faXmark)
 library.add(faCheck)
 library.add(faRightFromBracket)
+library.add(faGripVertical)
+
 
 const app = createApp(App)
 

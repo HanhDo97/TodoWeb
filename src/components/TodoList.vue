@@ -9,6 +9,7 @@ defineProps({
 <template>
     <div class="todo-card">
         <div class="todo-header">
+            <div class="handle"><font-awesome-icon icon="fa-solid fa-grip-vertical" /></div>
             <p>{{ todoTitle }}</p>
             <button><font-awesome-icon icon="fa-solid fa-ellipsis" /></button>
         </div>
@@ -18,6 +19,12 @@ defineProps({
     </div>
 </template>
 <style>
+.handle:hover{
+    cursor: grab;
+}
+.handle:active{
+    cursor: grabbing;
+}
 .todo-header button {
     color: whitesmoke;
     font-weight: 600;
@@ -43,6 +50,7 @@ defineProps({
 .todo-card {
     background-color: black;
     width: 270px;
+    height: 100%;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
