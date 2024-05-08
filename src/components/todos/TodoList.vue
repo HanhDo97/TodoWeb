@@ -50,7 +50,6 @@ defineProps({
 .todo-card {
     background-color: black;
     width: 270px;
-    height: 100%;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);

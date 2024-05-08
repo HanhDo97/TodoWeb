@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import ProjectAbout from './ProjectAbout.vue';
-import TodoList from './TodoList.vue';
-import TodoEdit from './TodoEdit.vue';
-import TodoAddNewCard from './TodoAddNewCard.vue';
+import ProjectAbout from './todos/ProjectAbout.vue';
+import TodoList from './todos/TodoList.vue';
+import TodoEdit from './todos/TodoEdit.vue';
+import TodoAddNewCard from './todos/TodoAddNewCard.vue';
+import TodoAddList from './todos/TodoAddList.vue';
 import draggable from "vuedraggable/dist/vuedraggable.common";
 
 const props = defineProps(['hiddenNav']);
@@ -17,7 +18,8 @@ const textAreaRect = ref({
     width: '0px'
 })
 const wrapperRect = ref(null);
-const editTask = ref(null)
+const editTask = ref(null);
+const todoDashBoardHeight = ref(window.innerHeight);
 let todoDashBoardWidth = ref(getReponsiveWidth());
 const list = ref([
     {
@@ -42,6 +44,8 @@ const list = ref([
     }
 ]);
 onMounted(() => {
+    calculateHeightOfDashboard();
+
     window.addEventListener('resize', () => {
         todoDashBoardWidth.value = getReponsiveWidth();
     })
@@ -59,6 +63,18 @@ onMounted(() => {
         }
     })
 })
+
+// calculate height of todo-dashboard
+function calculateHeightOfDashboard() {
+    let navRect = document.getElementsByTagName('nav')[0].getBoundingClientRect();
+    let projectAboutRect = document.getElementsByClassName('project-about-wrapper')[0].getBoundingClientRect();
+    let screenHeight = window.innerHeight;
+
+    todoDashBoardHeight.value = screenHeight - projectAboutRect.height - navRect.height;
+
+    console.log(todoDashBoardHeight);
+}
+
 function getReponsiveWidth() {
     if (!hiddenNav) {
         return window.innerWidth - 265;
@@ -143,6 +159,9 @@ function onAddNewCardValue(payload) {
                     </todo-list>
                 </template>
             </draggable>
+
+            <TodoAddList />
+
         </div>
     </div>
 </template>
@@ -199,13 +218,17 @@ function onAddNewCardValue(payload) {
 
 .todo-dashboard {
     position: relative;
-    color: rgb(226, 226, 226)
+    color: rgb(226, 226, 226);
+    display: flex;
+    align-items: flex-start;
+    overflow-x: auto;
 }
 
 .todo-list {
     padding: 10px;
     display: flex;
     gap: 1rem;
+    align-items: flex-start;
 }
 
 .table-dashboard-wrapper {

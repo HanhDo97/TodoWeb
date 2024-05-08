@@ -22,7 +22,6 @@ function handleToggleNav(hidden) {
 <style>
 main {
     position: relative;
-    min-height: 100vh;
     overflow: hidden;
 }
 
