@@ -24,6 +24,7 @@
 /* semantic color variables for this project */
 :root {
   --color-background: #2f6128;
+  --color-hover: #5b8d53;
   --color-background-soft: #222222;
   --color-background-mute: #282828;
 

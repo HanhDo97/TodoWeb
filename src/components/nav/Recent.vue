@@ -8,6 +8,7 @@ const showSlideDown = ref(false);
 const navRecentWrapperEle = ref(null);
 const emit = defineEmits(['onClickOutSide'])
 const hoverIndex = ref(null);
+const show = ref(false);
 const projects = ref([
     { name: 'Your Project', description: 'Todo Workspace' },
     { name: 'Your Project 02', description: 'Todo Workspace' }
@@ -16,6 +17,7 @@ const projects = ref([
 onMounted(() => {
     setTimeout(() => {
         showSlideDown.value = true;
+        show.value = true;
     }, 0);
 });
 onUpdated(() => {
@@ -32,36 +34,45 @@ function handleClick(ev) {
 }
 
 function clickProject() {
-    console.log(123);
 }
 </script>
 
 <template>
     <div name="nav-recent-wrapper" :class="{ 'nav-recent-wrapper': true, 'slide-down': showSlideDown }"
         :style="{ 'top': top, 'left': left }">
-        <div class="recent-wrapper">
-            <div v-for="(project, index) in projects" :key="index" class="recent-content"
-                @mouseenter="hoverIndex = index" @mouseleave="hoverIndex = null" @click="clickProject(project)">
-                <div class="image-container">
-                    <img src="/src/assets/logo.svg" alt="">
+        <Transition name="recent">
+            <div v-if="show" class="recent-wrapper">
+                <div v-for="(project, index) in projects" :key="index" class="recent-content"
+                    @mouseenter="hoverIndex = index" @mouseleave="hoverIndex = null" @click="clickProject(project)">
+                    <div class="image-container">
+                        <img src="/src/assets/logo.svg" alt="">
+                    </div>
+                    <div class="recent-text">
+                        <p>{{ project.name }}<br><small>{{ project.description }}</small></p>
+                    </div>
+                    <div class="start-container" :style="{ 'opacity': hoverIndex === index ? '1' : '' }">
+                        <font-awesome-icon icon="fa-solid fa-star" />
+                    </div>
                 </div>
-                <div class="recent-text">
-                    <p>{{ project.name }}<br><small>{{ project.description }}</small></p>
-                </div>
-                <div class="start-container" :style="{ 'opacity': hoverIndex === index ? '1' : '' }">
-                    <font-awesome-icon icon="fa-solid fa-star" />
-                </div>
-            </div>
 
-        </div>
+            </div>
+        </Transition>
     </div>
 </template>
 
 <style scoped>
+.recent-enter-active {
+    transition: transform 0.5s ease;
+}
+
+.recent-enter-from {
+    transform: translateY(-10%);
+}
 .start-container {
     margin-left: auto;
     opacity: 0;
-    transition: opacity 0.3s;;
+    transition: opacity 0.3s;
+    ;
 }
 
 .recent-content {

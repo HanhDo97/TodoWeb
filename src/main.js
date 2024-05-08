@@ -11,7 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faChevronDown, faChevronLeft, faChevronRight, faClock, faCopy, faEllipsis, faEllipsisH, faEllipsisV, faEllipsisVertical, faFilter, faGear, faImage, faList, faMagnifyingGlass, faPencil, faPlus, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faCheck, faChevronDown, faChevronLeft, faChevronRight, faClock, faCopy, faEllipsis, faEllipsisVertical, faFilter, faGear, faImage, faList, faMagnifyingGlass, faPencil, faPlus, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faList)
@@ -35,6 +35,7 @@ library.add(faRocket)
 library.add(faBoltLightning)
 library.add(faFilter)
 library.add(faEllipsis)
+library.add(faEllipsisVertical)
 library.add(faPencil)
 library.add(faAddressCard)
 library.add(faTag)
@@ -44,6 +45,7 @@ library.add(faRightLong)
 library.add(faCopy)
 library.add(faBox)
 library.add(faXmark)
+library.add(faCheck)
 
 const app = createApp(App)
 

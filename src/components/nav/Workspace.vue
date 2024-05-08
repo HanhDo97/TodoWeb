@@ -5,11 +5,13 @@ const emit = defineEmits(['onClickOutSide']);
 const top = props.top;
 const left = props.left;
 const showSlideDown = ref(false);
+const show = ref(false);
 const navWorkSpaceWrapperEle = ref(null);
 
 onMounted(() => {
     setTimeout(() => {
         showSlideDown.value = true;
+        show.value = true;
     }, 0);
 });
 onUpdated(() => {
@@ -30,32 +32,43 @@ function handleClick(ev) {
 <template>
     <div name="nav-workspace-wrapper" :class="{ 'nav-workspace-wrapper': true, 'slide-down': showSlideDown }"
         :style="{ 'top': top, 'left': left }">
-        <div class="workspace-title">Workspaces</div>
-        <div class="workspace-wrapper">
-            <h5>Current Workspace</h5>
-            <div class="workspace-content">
-                <div class="image-container">
-                    <img src="/src/assets/logo.svg" alt="">
+        <Transition name="workspace">
+            <div v-if="show" class="">
+                <div class="workspace-title">Workspaces</div>
+                <div class="workspace-wrapper">
+                    <h5>Current Workspace</h5>
+                    <div class="workspace-content">
+                        <div class="image-container">
+                            <img src="/src/assets/logo.svg" alt="">
+                        </div>
+                        <div class="workspace-text">
+                            <p>Todo Workspace</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="workspace-text">
-                    <p>Todo Workspace</p>
+                <div class="workspace-wrapper">
+                    <h5>Your Workspaces</h5>
+                    <button class="workspace-btn-content">
+                        <div class="image-container">
+                            <img src="/src/assets/logo.svg" alt="">
+                        </div>
+                        <div class="workspace-text">
+                            <p>Todo Workspace</p>
+                        </div>
+                    </button>
                 </div>
             </div>
-        </div>
-        <div class="workspace-wrapper">
-            <h5>Your Workspaces</h5>
-            <button class="workspace-btn-content">
-                <div class="image-container">
-                    <img src="/src/assets/logo.svg" alt="">
-                </div>
-                <div class="workspace-text">
-                    <p>Todo Workspace</p>
-                </div>
-            </button>
-        </div>
+        </Transition>
     </div>
 </template>
 <style scoped>
+.workspace-enter-active {
+    transition: transform 0.5s ease;
+}
+
+.workspace-enter-from {
+    transform: translateY(-10%);
+}
 .workspace-content {
     display: flex;
     margin-top: 5px;

@@ -1,18 +1,15 @@
 @import './base.css';
 
-#app {
-}
+#app {}
 
 button {
-  font-family: -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    'Roboto',
-    'Noto Sans',
-    'Ubuntu',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family);
+  font-weight: 500;
+}
+
+p {
+  font-family: var(--font-family);
+  font-weight: 500;
 }
 
 a {

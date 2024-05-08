@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted, onUpdated } from 'vue';
+import Template from './Template.vue'
+import Star from './Star.vue'
 
 const props = defineProps(['bottom', 'left', 'top']);
 const top = props.top;
@@ -10,10 +12,12 @@ const emit = defineEmits(['onClickOutSide']);
 const displayActions = ref(false);
 const actions = ref({
     star: {
+        code: 'star',
         title: 'Starred boards',
         displayChildren: false
     },
     template: {
+        code: 'template',
         title: 'Templates',
         displayChildren: false
     }
@@ -70,19 +74,20 @@ function closeNavInformation() {
                 </div>
             </div>
         </Transition>
-        <Transition name="starred-boards">
-            <div v-if="!displayActions && actions.star.displayChildren" class="more-board">
+        <Transition name="child-boards" v-for="(action, index) in actions" :key="index">
+            <div v-if="!displayActions && action.displayChildren" class="more-board">
                 <div class="title-boards">
-                    <button @click="backToActionMenu(actions.star)"><font-awesome-icon
+                    <button @click="backToActionMenu(action)"><font-awesome-icon
                             icon="fa-solid fa-chevron-left" /></button>
                     <p><b>{{ actions.star.title }}</b></p>
                     <button @click="closeNavInformation"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
                 </div>
-                <div class="content-boards">
-                    <img src="/src/assets/no-starred.png" alt="">
+
+                <div class="" v-if="action.code == 'template'">
+                    <Template :isInMoreNav="true" />
                 </div>
-                <div class="footer-boards">
-                    <p>Star important boards to access them quickly and easily.</p>
+                <div class="" v-if="action.code == 'star'">
+                    <Star :isInMoreNav="true" />
                 </div>
             </div>
         </Transition>
@@ -90,13 +95,7 @@ function closeNavInformation() {
 </template>
 
 <style scoped>
-.content-boards img {
-    width: 100%;
-}
-
-.more-board .footer-boards,
-.more-board .title-boards,
-.more-board .content-boards {
+.more-board .title-boards {
     padding: 10px;
 }
 
@@ -104,6 +103,7 @@ function closeNavInformation() {
     border: none;
     width: 32px;
     height: 32px;
+    background-color: transparent
 }
 
 .more-board .title-boards button:hover {
@@ -120,17 +120,17 @@ function closeNavInformation() {
 }
 
 .actions-leave-active,
-.starred-boards-leave-active {
+.child-boards-leave-active {
     transition: transform 0s
 }
 
 .actions-leave-to,
-.starred-boards-leave-to {
+.child-boards-leave-to {
     opacity: 0;
 }
 
 .actions-enter-active,
-.starred-boards-enter-active {
+.child-boards-enter-active {
     transition: transform 0.5s ease;
 }
 
@@ -138,7 +138,7 @@ function closeNavInformation() {
     transform: translateY(-20%);
 }
 
-.starred-boards-enter-from {
+.child-boards-enter-from {
     transform: translateY(-5%);
 }
 
