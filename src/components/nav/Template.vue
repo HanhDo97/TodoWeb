@@ -180,6 +180,7 @@ h5 {
     align-items: center;
     margin-bottom: 5px;
     padding: 5px;
+    transition: 0.4s;
 }
 .template:hover{
     background-color: var(--color-hover);

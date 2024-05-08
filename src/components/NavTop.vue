@@ -8,10 +8,15 @@ import Template from './nav/Template.vue';
 import Star from './nav/Star.vue';
 import Create from './nav/Create.vue';
 import Notification from './nav/Notification.vue';
+import User from './nav/User.vue';
 
 const showInput = ref(false);
 const navNavigator = ref({
-    notification: {
+    user: {
+        display: false,
+        right: '0px',
+        top: '55px'
+    }, notification: {
         display: false,
         right: '0px',
         top: '55px'
@@ -60,7 +65,6 @@ function toggleInputSearch(event) {
     if (searchWrapperEl.value !== undefined && searchWrapperEl.value.contains(event.target)) { /* empty */ }
     else {
         showInput.value = false;
-        console.log(showInput.value);
         window.removeEventListener('click', toggleInputSearch)
     }
 }
@@ -145,7 +149,8 @@ function onClickOutSide(isClickOutSide) {
             </div>
             <button @click="displayNavInformation('notification')" class="notification-btn"
                 name="notification-btn"><font-awesome-icon icon="fa-solid fa-bell" /></button>
-            <button class="user-btn"><font-awesome-icon icon="fa-solid fa-user" /></button>
+            <button @click="displayNavInformation('user')" name="user-btn" class="user-btn"><font-awesome-icon
+                    icon="fa-solid fa-user" /></button>
         </div>
 
         <Feature v-if="navNavigator.feature.display" :top="navNavigator.feature.top" :left="navNavigator.feature.left"
@@ -167,8 +172,11 @@ function onClickOutSide(isClickOutSide) {
         <Create v-if="navNavigator.create.display" :top="navNavigator.create.top" :left="navNavigator.create.left"
             @on-click-out-side="onClickOutSide" />
 
-        <Notification v-if="navNavigator.notification.display" :top="navNavigator.notification.top" :right="navNavigator.notification.right"
-            @on-click-out-side="onClickOutSide" />
+        <Notification v-if="navNavigator.notification.display" :top="navNavigator.notification.top"
+            :right="navNavigator.notification.right" @on-click-out-side="onClickOutSide" />
+        <User v-if="navNavigator.user.display" :top="navNavigator.user.top"
+            :right="navNavigator.user.right" @on-click-out-side="onClickOutSide" />
+
 
     </nav>
 </template>

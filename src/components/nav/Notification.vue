@@ -59,7 +59,13 @@ function toggleNotification(ev) {
                         </button>
                     </div>
                 </div>
-
+                <div class="content">
+                    <div class="empty-notification">
+                        <img src="/src/assets/sleep.png" alt="">
+                        <h2 v-if="!unread">No unread notifications</h2>
+                        <h2 v-else>No notifications</h2>
+                    </div>
+                </div>
 
             </div>
         </Transition>
@@ -67,9 +73,26 @@ function toggleNotification(ev) {
 </template>
 
 <style>
-.notification-container{
+.notification-container .content img{
+    width: 100%;
+}
+.notification-container .content {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+.notification-container .content .empty-notification{
+    width: 300px;
+    height: 300px;
+    margin-top: .5rem;
+    text-align: center;
+}
+
+.notification-container {
     height: 400px;
 }
+
 .nav {
     display: flex;
     justify-content: space-between;
@@ -78,18 +101,20 @@ function toggleNotification(ev) {
     height: 50px;
 }
 
-.action button{
+.action button {
     width: 30px;
     height: 30px;
     background-color: transparent;
     border-radius: 5px;
     border: none;
 }
+
 .action button:hover {
     background-color: var(--color-hover);
     cursor: pointer;
     color: whitesmoke;
 }
+
 .action {
     display: flex;
     gap: 10px;
@@ -145,7 +170,7 @@ function toggleNotification(ev) {
 }
 
 .notification-enter-from {
-    transform: translateY(-50%);
+    transform: translateY(-20%);
 }
 
 .nav-notification-wrapper {
@@ -166,4 +191,5 @@ function toggleNotification(ev) {
 .slide-down {
     transform: scale(1, 1);
     opacity: 1;
-}</style>
+}
+</style>

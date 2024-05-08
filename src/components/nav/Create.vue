@@ -80,6 +80,7 @@ function handleClick(ev) {
 .create-container:hover {
     background-color: rgb(213, 211, 211);
     cursor: pointer;
+    transition: 0.4s;
 }
 
 .create-container {
