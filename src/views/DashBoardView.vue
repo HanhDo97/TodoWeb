@@ -2,12 +2,18 @@
 import NavTop from '../components/NavTop.vue'
 import NavSlide from '@/components/NavSlide.vue';
 import TableDashBoard from '@/components/TableDashBoard.vue';
-import { ref } from 'vue';
-
-let hiddenNav = ref(true);
 
 function handleToggleNav(hidden) {
-    hiddenNav.value = hidden;
+    let tableDashBoardWrapperEl = document.getElementsByClassName('table-dashboard-wrapper')[0];
+    console.log(hidden);
+    
+    if (hidden) {
+        tableDashBoardWrapperEl.classList.remove('slide-right-from');
+        tableDashBoardWrapperEl.classList.add('slide-right-to');
+    } else {
+        tableDashBoardWrapperEl.classList.remove('slide-right-to');
+        tableDashBoardWrapperEl.classList.add('slide-right', 'slide-right-from');
+    }
 }
 </script>
 <template>
@@ -16,13 +22,14 @@ function handleToggleNav(hidden) {
     </header>
     <main>
         <NavSlide @toggle-nav-btn="handleToggleNav" />
-        <TableDashBoard :hiddenNav="hiddenNav" :key="hiddenNav" />
+        <TableDashBoard/>
     </main>
 </template>
 <style>
 main {
     position: relative;
     overflow: hidden;
+    margin-top: 52px;
 }
 
 header {

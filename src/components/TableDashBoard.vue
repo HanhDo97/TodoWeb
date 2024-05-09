@@ -19,6 +19,7 @@ const textAreaRect = ref({
 })
 const wrapperRect = ref(null);
 const editTask = ref(null);
+const idList = ref(null);
 const todoDashBoardHeight = ref(window.innerHeight);
 const list = ref([
     {
@@ -57,10 +58,9 @@ onMounted(() => {
             && showEditTextArea.value
             && opacityDashBoard.value
         ) {
-            showEditTextArea.value = false;
             disableEditMode();
         }
-    })
+    });
 })
 
 // calculate height of todo-dashboard
@@ -75,11 +75,11 @@ function enableEditMode(list, task, event) {
     opacityDashBoard.value = true;
 
     editTask.value = task;
+    idList.value = list.id;
 
-    let todoTask = document.getElementById('todo-task-' + task.taskId);
-    let wrapper = document.getElementsByClassName('table-dashboard-wrapper');
-    let wrapperDomRect = wrapper[0].getBoundingClientRect();
-    let domRect = todoTask.getBoundingClientRect();
+    let wrapperDomRect = document.getElementsByClassName('table-dashboard-wrapper')[0].getBoundingClientRect();
+    let domRect = document.getElementById('todo-task-' + task.taskId).getBoundingClientRect();
+
     textAreaRect.value.top = domRect.top;
     textAreaRect.value.left = domRect.left;
     textAreaRect.value.width = domRect.width;
@@ -90,6 +90,8 @@ function enableEditMode(list, task, event) {
 }
 function disableEditMode() {
     opacityDashBoard.value = false;
+    showEditTextArea.value = false;
+
 }
 
 // function determine which list is on add new card
@@ -117,17 +119,26 @@ function onUpdateTitle(payload) {
     list.value[listEleIndex].listName = payload.title;
 }
 
+function onUpdateTask(payload) {
+    let listEleIndex = list.value.findIndex((el) => el.id == payload.idList)
+    let taskEleIndex = list.value[listEleIndex].todos.findIndex((el) => el.taskId == payload.id)
+
+    list.value[listEleIndex].todos[taskEleIndex].taskName = payload.title
+    disableEditMode();
+}
+
 function onCreateList(payload) {
     list.value.push(payload);
 }
 </script>
 
 <template>
-    <div class="table-dashboard-wrapper" :class="[!hiddenNav ? 'slide-right slide-right-from' : 'slide-right-to']">
-        <TodoEdit :editTask="editTask" :textAreaRect="textAreaRect" :wrapperDomRect="wrapperRect"
-            v-if="showEditTextArea" :key="editTask.taskId" class="todo-edit" />
+    <div class="table-dashboard-wrapper slide-right-to">
+        <TodoEdit :editTask="editTask" :textAreaRect="textAreaRect" :wrapperDomRect="wrapperRect" :idList="idList"
+            :todoDashBoardHeight="todoDashBoardHeight" @update-task="onUpdateTask" v-if="showEditTextArea"
+            :key="editTask.taskId" class="todo-edit" />
 
-        <ProjectAbout :hiddenNav="hiddenNav" :key="hiddenNav" />
+        <ProjectAbout />
 
         <div class="todo-dashboard" :style="{ height: todoDashBoardHeight + 'px' }"
             :class="{ 'opacity': opacityDashBoard }">
@@ -143,7 +154,7 @@ function onCreateList(payload) {
                                         <slot v-bind="task">
                                             <p>
                                                 <span>{{ task.taskName }}</span>
-                                                <button @click="enableEditMode(list.todos, task, $event)">
+                                                <button @click="enableEditMode(list, task, $event)">
                                                     <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
                                                 </button>
                                             </p>
@@ -204,11 +215,11 @@ function onCreateList(payload) {
 }
 
 .slide-right {
-    transition: transform 1s ease;
+    transition: transform 0.3s ease;
 }
 
 .slide-right-to {
-    transform: translateX(30px);
+    transform: translateX(0);
 }
 
 .slide-right-from {
@@ -231,8 +242,9 @@ function onCreateList(payload) {
 }
 
 .table-dashboard-wrapper {
-    height: 100vh;
     width: 100%;
     background-color: #37722f;
+    margin-left: 30px;
+    position: fixed
 }
 </style>

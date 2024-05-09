@@ -174,8 +174,8 @@ function onClickOutSide(isClickOutSide) {
 
         <Notification v-if="navNavigator.notification.display" :top="navNavigator.notification.top"
             :right="navNavigator.notification.right" @on-click-out-side="onClickOutSide" />
-        <User v-if="navNavigator.user.display" :top="navNavigator.user.top"
-            :right="navNavigator.user.right" @on-click-out-side="onClickOutSide" />
+        <User v-if="navNavigator.user.display" :top="navNavigator.user.top" :right="navNavigator.user.right"
+            @on-click-out-side="onClickOutSide" />
 
 
     </nav>
@@ -278,7 +278,9 @@ nav {
     display: flex;
     justify-content: space-between;
     padding: 5px;
-    position: relative;
+    position: fixed;
+    width: 100%;
+    z-index: 99;
 }
 
 nav button span {

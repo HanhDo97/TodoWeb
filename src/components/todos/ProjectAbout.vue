@@ -1,10 +1,5 @@
-<script setup>
-const props = defineProps(['hiddenNav']);
-const hiddenNav = props.hiddenNav;
-</script>
-
 <template>
-    <div class="project-about-wrapper" :style="{ width: hiddenNav ? 'calc(100% - 25px)' : 'calc(100% - 250px)' }">
+    <div class="project-about-wrapper">
         <div class="about-left">
             <button>
                 <h3>Todo Project</h3>
@@ -31,11 +26,7 @@ const hiddenNav = props.hiddenNav;
 </template>
 <style scoped>
 .about-right {
-    float: right;
-}
-
-.about-left {
-    display: inline-block
+    text-align: right;
 }
 
 .highlight-btn {
@@ -73,12 +64,14 @@ const hiddenNav = props.hiddenNav;
     min-height: 59px;
     background-color: rgb(255, 255, 255, 0.1);
     padding: 5px;
-
+    display: grid;
+    grid-template-columns: auto auto;
+    width: calc(100% - 25px);
 }
 
-@media (max-width: 630px) {
+@media (max-width: 350px) {
     .project-about-wrapper {
-        min-height: 110px;
+        grid-template-columns: auto
     }
 }
 </style>

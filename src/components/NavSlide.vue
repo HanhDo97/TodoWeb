@@ -128,9 +128,8 @@ li:hover {
 .nav-slide-warrper {
     height: 100%;
     width: 250px;
-    position: absolute;
+    position: fixed;
     transition: 0.5s;
-    /* background-color: blue; */
     z-index: 10;
 }
 

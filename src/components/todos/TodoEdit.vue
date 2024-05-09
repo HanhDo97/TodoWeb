@@ -1,30 +1,50 @@
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
-const props = defineProps(['textAreaRect', 'wrapperDomRect', 'editTask']);
+const props = defineProps(['textAreaRect', 'wrapperDomRect', 'editTask', 'idList', 'todoDashBoardHeight']);
+const emit = defineEmits(['updateTask']);
 
 const top = computed(() => props.textAreaRect.top - props.wrapperDomRect.top);
 const left = computed(() => props.textAreaRect.left - props.wrapperDomRect.left);
 const width = props.textAreaRect.width;
+const title = ref(props.editTask.taskName)
+
+const topOfEditActionDiv = ref(0)
 
 onMounted(() => {
     let textarea = document.getElementsByName('todo-task-edit')[0];
     textarea.focus();
+
+    let rectOfEditActionDiv = document.getElementsByClassName('todo-edit-action')[0].getBoundingClientRect();
+
+    topOfEditActionDiv.value = (props.todoDashBoardHeight - top.value - rectOfEditActionDiv.height > 0) ? '0px' : props.todoDashBoardHeight - top.value - rectOfEditActionDiv.height + 'px';
 })
+
+function updateTask() {
+    if (title.value !== '') {
+        let payload = {
+            id: props.editTask.taskId,
+            idList: props.idList,
+            title: title.value,
+        }
+        emit('updateTask', payload);
+    }
+}
 </script>
 
 <template>
     <div class="todo-edit-wrapper" :style="{ 'top': top + 'px', 'left': left + 'px' }">
         <div class="textarea-wrapper">
             <textarea class="textarea" :style="{ 'width': width + 'px' }" name="todo-task-edit" id="" cols="26" rows="3"
-                :value="props.editTask.taskName">
+                v-model="title">
         </textarea>
-        <button>
-            Save
-        </button>
+            <br>
+            <button @click="updateTask">
+                Save
+            </button>
         </div>
 
-        <div class="todo-edit-action">
+        <div class="todo-edit-action" :style="{ top: topOfEditActionDiv }">
             <div class="todo-edit-but">
                 <button>
                     <span><font-awesome-icon icon="fa-solid fa-address-card" /></span>
@@ -83,6 +103,8 @@ onMounted(() => {
     gap: .1rem;
     flex-wrap: wrap;
     flex-direction: column;
+    position: absolute;
+    right: 0;
 }
 
 .todo-edit-wrapper button {
