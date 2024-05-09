@@ -4,7 +4,7 @@ const hiddenNav = props.hiddenNav;
 </script>
 
 <template>
-    <div class="project-about-wrapper" :style="{ width: hiddenNav ? '98%' : 'calc(100% - 250px)' }">
+    <div class="project-about-wrapper" :style="{ width: hiddenNav ? 'calc(100% - 25px)' : 'calc(100% - 250px)' }">
         <div class="about-left">
             <button>
                 <h3>Todo Project</h3>

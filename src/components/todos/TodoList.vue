@@ -1,16 +1,69 @@
 <script setup>
-defineProps({
+import { ref, onMounted } from 'vue';
+
+const props = defineProps({
     todoTitle: {
         type: String,
         required: true
+    }, id: {
+        type: [Number, String],
+        required: true
     }
 })
+const emit = defineEmits(['updateTitle', 'closeAddList'])
+const editStatus = ref(false)
+const title = ref(props.todoTitle)
+const inputEl = ref(null)
+
+onMounted(() => {
+    if (props.todoTitle == '') {
+        editTitleEnable()
+    }
+})
+
+function editTitleEnable() {
+    editStatus.value = true
+
+    setTimeout(() => {
+        inputEl.value = document.getElementsByTagName('input')[0];
+        inputEl.value.focus();
+
+        // Add event listener for the blur event
+        inputEl.value.addEventListener('blur', onBlurCallback);
+        // Add event listener for the Enter key press event
+        inputEl.value.addEventListener('keypress', onEnterKeyPress);
+    }, 0)
+}
+function onBlurCallback() {
+    editStatus.value = false;
+
+    // Update Title
+    if (title.value !== props.todoTitle || title.value !== '') {
+        let payload = {
+            id: props.id,
+            title: title.value
+        }
+        emit('updateTitle', payload)
+    } else {
+        emit('closeAddList', true)
+    }
+
+    inputEl.value.removeEventListener('blur', onBlurCallback);
+}
+function onEnterKeyPress(event) {
+    if (event.key === "Enter") {
+        onBlurCallback();
+    }
+}
 </script>
 <template>
     <div class="todo-card">
         <div class="todo-header">
             <div class="handle"><font-awesome-icon icon="fa-solid fa-grip-vertical" /></div>
-            <p>{{ todoTitle }}</p>
+            <Transition name="edit-status">
+                <p :key="1" v-if="!editStatus" class="title" @click="editTitleEnable">{{ todoTitle }}</p>
+                <input :key="2" v-else type="text" v-model="title">
+            </Transition>
             <button><font-awesome-icon icon="fa-solid fa-ellipsis" /></button>
         </div>
         <div class="todo-body">
@@ -19,12 +72,29 @@ defineProps({
     </div>
 </template>
 <style>
-.handle:hover{
+.edit-status-enter-active,
+.edit-status-leave-active {
+    transition: all 0.3s ease;
+}
+
+.edit-status-enter-from,
+.edit-status-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+
+.todo-card .title:hover {
+    cursor: pointer;
+}
+
+.handle:hover {
     cursor: grab;
 }
-.handle:active{
+
+.handle:active {
     cursor: grabbing;
 }
+
 .todo-header button {
     color: whitesmoke;
     font-weight: 600;

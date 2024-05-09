@@ -20,7 +20,6 @@ const textAreaRect = ref({
 const wrapperRect = ref(null);
 const editTask = ref(null);
 const todoDashBoardHeight = ref(window.innerHeight);
-let todoDashBoardWidth = ref(getReponsiveWidth());
 const list = ref([
     {
         id: 1,
@@ -47,7 +46,7 @@ onMounted(() => {
     calculateHeightOfDashboard();
 
     window.addEventListener('resize', () => {
-        todoDashBoardWidth.value = getReponsiveWidth();
+        calculateHeightOfDashboard();
     })
 
     window.addEventListener('click', function (event) {
@@ -70,16 +69,7 @@ function calculateHeightOfDashboard() {
     let projectAboutRect = document.getElementsByClassName('project-about-wrapper')[0].getBoundingClientRect();
     let screenHeight = window.innerHeight;
 
-    todoDashBoardHeight.value = screenHeight - projectAboutRect.height - navRect.height;
-
-    console.log(todoDashBoardHeight);
-}
-
-function getReponsiveWidth() {
-    if (!hiddenNav) {
-        return window.innerWidth - 265;
-    }
-    return window.innerWidth - 51;
+    todoDashBoardHeight.value = screenHeight - navRect.height - projectAboutRect.height;
 }
 function enableEditMode(list, task, event) {
     opacityDashBoard.value = true;
@@ -121,6 +111,15 @@ function onAddNewCardValue(payload) {
     let listIndex = list.value.findIndex((el) => el.id == payload.id);
     list.value[listIndex].todos.push(task)
 }
+
+function onUpdateTitle(payload) {
+    let listEleIndex = list.value.findIndex((el) => el.id == payload.id)
+    list.value[listEleIndex].listName = payload.title;
+}
+
+function onCreateList(payload) {
+    list.value.push(payload);
+}
 </script>
 
 <template>
@@ -130,11 +129,11 @@ function onAddNewCardValue(payload) {
 
         <ProjectAbout :hiddenNav="hiddenNav" :key="hiddenNav" />
 
-        <div class="todo-dashboard" :style="{ width: todoDashBoardWidth + 'px' }"
+        <div class="todo-dashboard" :style="{ height: todoDashBoardHeight + 'px' }"
             :class="{ 'opacity': opacityDashBoard }">
             <draggable v-model="list" group="list" class="todo-list" item-key="id" :animation="300" handle=".handle">
                 <template #item="{ element: list }">
-                    <todo-list :todoTitle="list.listName">
+                    <todo-list :todoTitle="list.listName" :id="list.id" @update-title="onUpdateTitle">
                         <draggable v-model="list.todos" class="task-group" :group="{ name: 'tasks' }" item-key="taskId"
                             :animation="300">
                             <template #item="{ element: task }">
@@ -160,7 +159,7 @@ function onAddNewCardValue(payload) {
                 </template>
             </draggable>
 
-            <TodoAddList />
+            <TodoAddList @create-list="onCreateList" />
 
         </div>
     </div>

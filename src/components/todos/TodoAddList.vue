@@ -1,12 +1,51 @@
 <script setup>
+import TodoList from './TodoList.vue';
+import { nanoid } from 'nanoid';
+import { ref } from 'vue';
+
+const emit = defineEmits(['createList']);
+const id = ref(nanoid());
+const hideAddList = ref(true);
+
+function onUpdateTitle(payload) {
+    console.log(payload);
+    if (payload.title == '') {
+        onCloseAddList();
+    }
+    else {
+        let data = {
+            id: payload.id,
+            listName: payload.title,
+            todos: [],
+        }
+        emit('createList', data);
+        onCloseAddList();
+    }
+}
+function onCloseAddList() {
+    hideAddList.value = true;
+}
+function showAddList() {
+    hideAddList.value = false;
+}
 </script>
 <template>
-    <button class="todo-add-list">
+
+    <div v-if="!hideAddList" class="card-wrapper">
+        <TodoList :todoTitle="''" :id="id" @update-title="onUpdateTitle" @close-add-list="onCloseAddList" />
+    </div>
+
+    <div @click="showAddList()" class="todo-add-list">
         + Add another list
-    </button>
+    </div>
 </template>
 <style scoped>
+.card-wrapper {
+    margin: 12px;
+}
+
 .todo-add-list {
+    white-space: nowrap;
     margin: 15px;
     height: 50px;
     width: 270px;
@@ -16,6 +55,9 @@
     color: whitesmoke;
     font-size: 18px;
     text-align: left;
+    display: flex;
+    align-items: center;
+    padding: 5px;
 }
 
 .todo-add-list:hover {
