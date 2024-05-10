@@ -223,7 +223,7 @@ function onCreateList(payload) {
 }
 
 .slide-right-from {
-    transform: translateX(250px);
+    transform: translateX(225px);
 }
 
 .todo-dashboard {
@@ -244,7 +244,7 @@ function onCreateList(payload) {
 .table-dashboard-wrapper {
     width: 100%;
     background-color: #37722f;
-    margin-left: 30px;
+    margin-left: 26px;
     position: fixed
 }
 </style>

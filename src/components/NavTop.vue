@@ -281,6 +281,7 @@ nav {
     position: fixed;
     width: 100%;
     z-index: 99;
+    background-color: var(--vt-c-black);
 }
 
 nav button span {

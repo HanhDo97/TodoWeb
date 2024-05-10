@@ -58,7 +58,7 @@
 </template>
 
 <style scoped>
-.nav-slide-warrper p{
+.nav-slide-warrper p {
     color: rgb(226, 226, 226);
 }
 
@@ -130,6 +130,7 @@ li:hover {
     width: 250px;
     position: fixed;
     transition: 0.5s;
+    background-color: var(--vt-c-black);
     z-index: 10;
 }
 

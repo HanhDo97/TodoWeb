@@ -106,7 +106,7 @@ function closeNavInformation() {
     transition: transform 0.5s ease;
 }
 .template-enter-from {
-    transform: translateY(-10%);
+    transform: translateY(-5%);
 }
 
 .nav-template-wrapper {
