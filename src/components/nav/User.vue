@@ -1,12 +1,13 @@
 <script setup>
+import UserService from '@/services/UserService';
 import { onMounted, ref, onUpdated } from 'vue';
-
+import { useRouter } from 'vue-router';
 const props = defineProps(['bottom', 'right', 'top']);
 const showSlideDown = ref(false);
 const navUserWrapperEle = ref(null);
 const emit = defineEmits(['onClickOutSide'])
 const show = ref(false);
-
+const router = useRouter();
 
 onMounted(() => {
     setTimeout(() => {
@@ -25,6 +26,19 @@ function handleClick(ev) {
         emit('onClickOutSide', true);
         window.removeEventListener('click', handleClick)
     }
+}
+function logOut() {
+    UserService.logOut()
+        .then(() => {
+            localStorage.removeItem('token');
+            
+            router.push({
+                name: "login"
+            });
+        }).catch((err) => {
+            console.log(err)
+        })
+
 }
 </script>
 <template>
@@ -72,7 +86,7 @@ function handleClick(ev) {
                 </div>
                 <div class="log-out">
                     <ul>
-                        <li><a href="">Log out</a></li>
+                        <li><a @click="logOut">Log out</a></li>
                     </ul>
                 </div>
 
@@ -113,6 +127,7 @@ a:hover {
     background-color: var(--color-hover);
     color: whitesmoke !important;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .name-image {

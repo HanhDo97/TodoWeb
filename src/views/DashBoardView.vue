@@ -1,12 +1,26 @@
 <script setup>
+import { onMounted } from 'vue';
 import NavTop from '../components/NavTop.vue'
 import NavSlide from '@/components/NavSlide.vue';
 import TableDashBoard from '@/components/TableDashBoard.vue';
+import UserService from '@/services/UserService';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+onMounted(() => {
+    // Get user information
+    UserService.getInfor()
+        .then((res) => {
+        })
+        .catch((err) => {
+            UserService.navigateLoginPage(err);
+        })
+})
 
 function handleToggleNav(hidden) {
     let tableDashBoardWrapperEl = document.getElementsByClassName('table-dashboard-wrapper')[0];
-    console.log(hidden);
-    
+
     if (hidden) {
         tableDashBoardWrapperEl.classList.remove('slide-right-from');
         tableDashBoardWrapperEl.classList.add('slide-right-to');
@@ -22,7 +36,7 @@ function handleToggleNav(hidden) {
     </header>
     <main>
         <NavSlide @toggle-nav-btn="handleToggleNav" />
-        <TableDashBoard/>
+        <TableDashBoard />
     </main>
 </template>
 <style>

@@ -63,12 +63,13 @@ function continueLogin() {
             if (res.data.data.token != undefined &&
                 res.data.data.token != ''
             ) {
-                // Save token to cookies
-                cookies.set('token', res.data.data.token);
+                localStorage.setItem('token', res.data.data.token);
 
-                router.push({
-                    name: 'dashboard'
-                });
+                setTimeout(() => {
+                    router.push({
+                        name: 'dashboard'
+                    });
+                }, 0);
             }
         }).catch((error) => {
             console.log(error);
