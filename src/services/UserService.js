@@ -16,7 +16,7 @@ export default {
             const token = localStorage.getItem('token');
             const response = await httpClient.get('/get', {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 }
             });
             return response.data;

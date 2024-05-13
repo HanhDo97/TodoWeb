@@ -36,7 +36,7 @@ function logOut() {
                 name: "login"
             });
         }).catch((err) => {
-            console.log(err)
+            UserService.navigateLoginPage(err);
         })
 
 }

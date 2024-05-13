@@ -11,6 +11,9 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+import vue3GoogleLogin from 'vue3-google-login'
+
 import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faCheck, faChevronDown, faChevronLeft, faChevronRight, faClock, faCopy, faEllipsis, faEllipsisVertical, faEye, faEyeSlash, faFilter, faGear, faGripVertical, faImage, faList, faMagnifyingGlass, faPencil, faPlus, faRightFromBracket, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
@@ -58,5 +61,8 @@ app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.use(createPinia())
 app.use(router)
+app.use(vue3GoogleLogin, {
+    clientId: '1003164627541-211kf5pn09g2oc04t6n6s2l1kq5lpheo.apps.googleusercontent.com'
+})
 
 app.mount('#app')

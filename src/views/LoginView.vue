@@ -1,5 +1,20 @@
 <script setup>
+import { onMounted } from 'vue';
 import Form from '@/components/login/Form.vue';
+import { googleOneTap, decodeCredential } from "vue3-google-login"
+
+
+onMounted(() => {
+    googleOneTap()
+        .then((response) => {
+            // This promise is resolved when user selects an account from the the One Tap prompt
+            const userData = decodeCredential(response.credential)
+            console.log("Handle the userData", userData)
+        })
+        .catch((error) => {
+            console.log("Handle the error", error)
+        })
+})
 </script>
 <template>
     <div class="login-wrapper">
@@ -8,7 +23,6 @@ import Form from '@/components/login/Form.vue';
         <Form />
         <h4>Or continue with:</h4>
         <div class="login-method">
-            <button>Google</button>
             <button>Microsoft</button>
             <button>Apple</button>
             <button>Slack</button>
@@ -20,7 +34,6 @@ import Form from '@/components/login/Form.vue';
     </div>
 </template>
 <style scoped>
-
 h3 {
     margin-bottom: 1rem
 }
