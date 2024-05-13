@@ -2,6 +2,9 @@
 import UserService from '@/services/UserService';
 import { onMounted, ref, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
+import { useLoadingStore } from '@/stores/loading';
+
+const loadingStore = useLoadingStore();
 const props = defineProps(['bottom', 'right', 'top']);
 const showSlideDown = ref(false);
 const navUserWrapperEle = ref(null);
@@ -28,8 +31,11 @@ function handleClick(ev) {
     }
 }
 function logOut() {
+    loadingStore.enableLoading('http');
+
     UserService.logOut()
         .then(() => {
+            loadingStore.disableLoading('http');
             localStorage.removeItem('token');
             
             router.push({
@@ -37,6 +43,7 @@ function logOut() {
             });
         }).catch((err) => {
             UserService.navigateLoginPage(err);
+            loadingStore.disableLoading('http');
         })
 
 }

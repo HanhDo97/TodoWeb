@@ -3,7 +3,6 @@ import { onMounted } from 'vue';
 import Form from '@/components/login/Form.vue';
 import { googleOneTap, decodeCredential } from "vue3-google-login"
 
-
 onMounted(() => {
     googleOneTap()
         .then((response) => {
@@ -23,6 +22,9 @@ onMounted(() => {
         <Form />
         <h4>Or continue with:</h4>
         <div class="login-method">
+            <GoogleLogin>
+                <button>Google</button>
+            </GoogleLogin>
             <button>Microsoft</button>
             <button>Apple</button>
             <button>Slack</button>
@@ -34,6 +36,9 @@ onMounted(() => {
     </div>
 </template>
 <style scoped>
+.g-btn-wrapper{
+    width: 100%;
+}
 h3 {
     margin-bottom: 1rem
 }
@@ -52,6 +57,13 @@ h3 {
     border-radius: 3px;
     border: none;
     font-size: 16px;
+}
+
+.login-wrapper button:hover{
+    cursor: pointer;
+    background-color: rgba(171, 164, 164, 0.7);
+    border-radius: 3px;
+    color: white;
 }
 
 .login-wrapper .login-method {
