@@ -2,8 +2,10 @@ import axios from 'axios';
 import TokenService from './TokenService';
 import router from '@/router/index'; // Import the router instance
 
+const baseURL = import.meta.env.VITE_BASE_URL
+
 const httpClient = axios.create({
-    baseURL: 'http://localhost:8888/api/user',
+    baseURL: `${baseURL}/api/user`,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
