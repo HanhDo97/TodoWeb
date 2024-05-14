@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore();
 const props = defineProps({
     todoTitle: {
         type: String,

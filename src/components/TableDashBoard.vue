@@ -14,10 +14,8 @@ const { todos } = storeToRefs(userStore);
 const isHovered = ref(false);
 const opacityDashBoard = ref(false);
 const showEditTextArea = ref(false);
-const textAreaRect = ref(null)
-const wrapperRect = ref(null);
-const editTask = ref(null);
-const idList = ref(null);
+const taskToEdit = ref(null);
+const listToEdit = ref(null);
 const todoDashBoardHeight = ref(window.innerHeight);
 
 onMounted(() => {
@@ -49,15 +47,14 @@ function calculateHeightOfDashboard() {
     todoDashBoardHeight.value = screenHeight - navRect.height - projectAboutRect.height;
 }
 function enableEditMode(list, task, event) {
+    // blur the screen
     opacityDashBoard.value = true;
 
-    editTask.value = task;
-    idList.value = list.id;
+    // Update data to update
+    taskToEdit.value = task;
+    listToEdit.value = list;
 
-    let wrapperDomRect = document.getElementsByClassName('table-dashboard-wrapper')[0].getBoundingClientRect();
-    textAreaRect.value = document.getElementById('todo-task-' + task.taskId).getBoundingClientRect();
-
-    wrapperRect.value = wrapperDomRect;
+    // show text area to
     showEditTextArea.value = true;
 
     event.stopPropagation();
@@ -65,7 +62,6 @@ function enableEditMode(list, task, event) {
 function disableEditMode() {
     opacityDashBoard.value = false;
     showEditTextArea.value = false;
-
 }
 
 // function determine which list is on add new card
@@ -79,29 +75,21 @@ function onAddNewCardId(id) {
     })
 }
 
+function isUpdateSuccess(bool) {
+    if (bool) {
+        disableEditMode();
+    }
+}
 function onUpdateTitle(payload) {
-    let listEleIndex = todos.value.findIndex((el) => el.id == payload.id)
-    todos.value[listEleIndex].listName = payload.title;
-}
-
-function onUpdateTask(payload) {
-    let listEleIndex = todos.value.findIndex((el) => el.id == payload.idList)
-    let taskEleIndex = todos.value[listEleIndex].todos.findIndex((el) => el.taskId == payload.id)
-
-    todos.value[listEleIndex].todos[taskEleIndex].taskName = payload.title
-    disableEditMode();
-}
-
-function onCreateList(payload) {
-    todos.value.push(payload);
+    userStore.updateList(payload);
 }
 </script>
 
 <template>
     <div class="table-dashboard-wrapper slide-right-to">
-        <TodoEdit :editTask="editTask" :textAreaRect="textAreaRect" :wrapperDomRect="wrapperRect" :idList="idList"
-            :todoDashBoardHeight="todoDashBoardHeight" @update-task="onUpdateTask" v-if="showEditTextArea"
-            :key="editTask.taskId" class="todo-edit" />
+        <TodoEdit v-if="showEditTextArea" :taskToEdit="taskToEdit" :listToEdit="listToEdit"
+            :todoDashBoardHeight="todoDashBoardHeight" @is-update-success="isUpdateSuccess" :key="taskToEdit.id"
+            class="todo-edit" />
 
         <ProjectAbout />
 
@@ -134,7 +122,7 @@ function onCreateList(payload) {
                 </template>
             </draggable>
 
-            <TodoAddList @create-list="onCreateList" />
+            <TodoAddList />
 
         </div>
     </div>

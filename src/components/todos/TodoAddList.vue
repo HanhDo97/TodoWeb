@@ -2,22 +2,26 @@
 import TodoList from './TodoList.vue';
 import { nanoid } from 'nanoid';
 import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
 
-const emit = defineEmits(['createList']);
+const userStore = useUserStore();
 const id = ref(nanoid());
 const hideAddList = ref(true);
 
 function onUpdateTitle(payload) {
+    console.log(payload);
     if (payload.title == '') {
         onCloseAddList();
     }
     else {
         let data = {
             id: payload.id,
-            listName: payload.title,
-            todos: [],
+            title: payload.title,
+            tasks: [],
         }
-        emit('createList', data);
+        
+        userStore.pushNewList(data);
+
         onCloseAddList();
     }
 }

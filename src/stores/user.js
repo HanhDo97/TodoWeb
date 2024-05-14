@@ -23,6 +23,9 @@ export const useUserStore = defineStore('user', {
                 return el;
             });
         },
+        pushNewList(payload) {
+            this.todos.push(payload);
+        },
         pushNewCard(payload) {
             let task = {
                 id: nanoid(),
@@ -30,6 +33,17 @@ export const useUserStore = defineStore('user', {
             }
             let listIndex = this.todos.findIndex((el) => el.id == payload.id);
             this.todos[listIndex].tasks.push(task)
+        },
+        updateTask(payload) {
+            let listEleIndex = this.todos.findIndex((el) => el.id == payload.idList)
+            let taskEleIndex = this.todos[listEleIndex].tasks.findIndex((el) => el.id == payload.id)
+
+            this.todos[listEleIndex].tasks[taskEleIndex].title = payload.title
+        },
+        updateList(payload){
+            let listEleIndex = this.todos.findIndex((el) => el.id == payload.id)
+            
+            this.todos[listEleIndex].title = payload.title;
         }
     }
 })

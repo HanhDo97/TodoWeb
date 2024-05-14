@@ -1,14 +1,18 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useUserStore } from '@/stores/user';
 
-const props = defineProps(['textAreaRect', 'wrapperDomRect', 'editTask', 'idList', 'todoDashBoardHeight']);
-const emit = defineEmits(['updateTask']);
+const userStore = useUserStore();
+const props = defineProps(['taskToEdit', 'listToEdit','todoDashBoardHeight']);
+const emit = defineEmits(['isUpdateSuccess']);
+const title = ref(props.taskToEdit.title)
 
-const top = computed(() => props.textAreaRect.top - props.wrapperDomRect.top);
-const left = computed(() => props.textAreaRect.left - props.wrapperDomRect.left);
-const width = props.textAreaRect.width;
-const title = ref(props.editTask.taskName)
-
+// Data to calculate position of elements
+const textAreaRect = ref(document.getElementById('todo-task-' + props.taskToEdit.id).getBoundingClientRect());
+const wrapperDomRect = ref(document.getElementsByClassName('table-dashboard-wrapper')[0].getBoundingClientRect());
+const top = computed(() => textAreaRect.value.top - wrapperDomRect.value.top);
+const left = computed(() => textAreaRect.value.left - wrapperDomRect.value.left);
+const width = textAreaRect.value.width;
 const topOfEditActionDiv = ref(0)
 
 onMounted(() => {
@@ -23,11 +27,14 @@ onMounted(() => {
 function updateTask() {
     if (title.value !== '') {
         let payload = {
-            id: props.editTask.taskId,
-            idList: props.idList,
+            id: props.taskToEdit.id,
+            idList: props.listToEdit.id,
             title: title.value,
         }
-        emit('updateTask', payload);
+
+        userStore.updateTask(payload);
+                
+        emit('isUpdateSuccess', true);
     }
 }
 </script>
