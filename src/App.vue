@@ -1,4 +1,5 @@
 <script setup>
+import FlashMessage from './components/cores/FlashMessage.vue';
 </script>
 
 <template>
@@ -7,8 +8,7 @@
   </header> -->
 
   <RouterView />
+  <FlashMessage />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

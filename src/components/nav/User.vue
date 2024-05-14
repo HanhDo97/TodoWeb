@@ -3,7 +3,9 @@ import UserService from '@/services/UserService';
 import { onMounted, ref, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLoadingStore } from '@/stores/loading';
+import { useFlashMessage } from '@/stores/FlassMessage';
 
+const flashMessage = useFlashMessage();
 const loadingStore = useLoadingStore();
 const props = defineProps(['bottom', 'right', 'top']);
 const showSlideDown = ref(false);
@@ -41,6 +43,8 @@ function logOut() {
             router.push({
                 name: "login"
             });
+
+            flashMessage.addMessage('Logged out')
         }).catch((err) => {
             UserService.navigateLoginPage(err);
             loadingStore.disableLoading('http');

@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import TokenService from '@/services/TokenService';
 import { useRouter } from 'vue-router';
-import { useCookies } from "vue3-cookies";
+import { useFlashMessage } from '@/stores/FlassMessage';
 
 const email = ref('');
 const password = ref('');
@@ -10,7 +10,7 @@ const isLogging = ref(false);
 const showPasswordInput = ref(false);
 const showPassword = ref(false);
 const router = useRouter();
-const { cookies } = useCookies();
+const flashMessage = useFlashMessage();
 
 const errors = ref({
     email: '',
@@ -70,6 +70,8 @@ function continueLogin() {
                         name: 'dashboard'
                     });
                 }, 0);
+
+                flashMessage.addMessage('Login Success')
             }
         }).catch((error) => {
             console.log(error);
