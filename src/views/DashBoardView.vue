@@ -4,14 +4,17 @@ import NavTop from '../components/NavTop.vue'
 import NavSlide from '@/components/NavSlide.vue';
 import TableDashBoard from '@/components/TableDashBoard.vue';
 import UserService from '@/services/UserService';
+import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loading';
 
 const loadingStore = useLoadingStore();
+const userStore = useUserStore();
 
 onMounted(() => {
     // Get user information
     UserService.getInfor()
         .then((res) => {
+            userStore.setupUser(res.data);
             loadingStore.disableLoading('page');
         })
         .catch((err) => {

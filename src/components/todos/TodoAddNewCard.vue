@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onUpdated } from 'vue';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 const props = defineProps(['list']);
 const list = props.list;
 const textVal = ref('');
@@ -26,7 +29,6 @@ function clickHandler(event) {
     if (
         newCardWrapper !== undefined && !newCardWrapper.contains(event.target)
     ) {
-        console.log('out of div');
         hideAddNewCardTemplate();
         textVal.value = '';
     }
@@ -46,7 +48,7 @@ function saveTextVal() {
         value: textVal.value,
     }
 
-    emit('addNewCardValue', payload);
+    userStore.pushNewCard(payload);
 
     textVal.value = '';
 

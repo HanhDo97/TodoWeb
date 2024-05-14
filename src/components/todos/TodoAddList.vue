@@ -8,7 +8,6 @@ const id = ref(nanoid());
 const hideAddList = ref(true);
 
 function onUpdateTitle(payload) {
-    console.log(payload);
     if (payload.title == '') {
         onCloseAddList();
     }

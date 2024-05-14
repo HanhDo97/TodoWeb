@@ -6,43 +6,20 @@ import TodoEdit from './todos/TodoEdit.vue';
 import TodoAddNewCard from './todos/TodoAddNewCard.vue';
 import TodoAddList from './todos/TodoAddList.vue';
 import draggable from "vuedraggable/dist/vuedraggable.common";
+import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
 
-const props = defineProps(['hiddenNav']);
-const hiddenNav = props.hiddenNav;
+const userStore = useUserStore();
+const { todos } = storeToRefs(userStore);
 const isHovered = ref(false);
 const opacityDashBoard = ref(false);
 const showEditTextArea = ref(false);
-const textAreaRect = ref({
-    top: '0px',
-    left: '0px',
-    width: '0px'
-})
+const textAreaRect = ref(null)
 const wrapperRect = ref(null);
 const editTask = ref(null);
 const idList = ref(null);
 const todoDashBoardHeight = ref(window.innerHeight);
-const list = ref([
-    {
-        id: 1,
-        listName: 'Planning',
-        todos: [
-            { taskId: 1, taskName: 'Project Planning' },
-            { taskId: 2, taskName: 'Sprint Planning' },
-            { taskId: 3, taskName: 'Metting Planning' },
-            { taskId: 4, taskName: 'Deploy Planning' }
-        ],
-        addNewCardStatus: false
-    },
-    {
-        id: 2,
-        listName: 'Doing',
-        todos: [
-            { taskId: 5, taskName: 'Project Doing' },
-            { taskId: 6, taskName: 'Sprint Doing' }
-        ],
-        addNewCardStatus: false
-    }
-]);
+
 onMounted(() => {
     calculateHeightOfDashboard();
 
@@ -78,11 +55,8 @@ function enableEditMode(list, task, event) {
     idList.value = list.id;
 
     let wrapperDomRect = document.getElementsByClassName('table-dashboard-wrapper')[0].getBoundingClientRect();
-    let domRect = document.getElementById('todo-task-' + task.taskId).getBoundingClientRect();
+    textAreaRect.value = document.getElementById('todo-task-' + task.taskId).getBoundingClientRect();
 
-    textAreaRect.value.top = domRect.top;
-    textAreaRect.value.left = domRect.left;
-    textAreaRect.value.width = domRect.width;
     wrapperRect.value = wrapperDomRect;
     showEditTextArea.value = true;
 
@@ -96,7 +70,7 @@ function disableEditMode() {
 
 // function determine which list is on add new card
 function onAddNewCardId(id) {
-    list.value.forEach((el) => {
+    todos.value.forEach((el) => {
         if (el.id == id) {
             el.addNewCardStatus = true;
         } else {
@@ -105,30 +79,21 @@ function onAddNewCardId(id) {
     })
 }
 
-function onAddNewCardValue(payload) {
-    let task = {
-        taskId: 123,
-        taskName: payload.value
-    }
-    let listIndex = list.value.findIndex((el) => el.id == payload.id);
-    list.value[listIndex].todos.push(task)
-}
-
 function onUpdateTitle(payload) {
-    let listEleIndex = list.value.findIndex((el) => el.id == payload.id)
-    list.value[listEleIndex].listName = payload.title;
+    let listEleIndex = todos.value.findIndex((el) => el.id == payload.id)
+    todos.value[listEleIndex].listName = payload.title;
 }
 
 function onUpdateTask(payload) {
-    let listEleIndex = list.value.findIndex((el) => el.id == payload.idList)
-    let taskEleIndex = list.value[listEleIndex].todos.findIndex((el) => el.taskId == payload.id)
+    let listEleIndex = todos.value.findIndex((el) => el.id == payload.idList)
+    let taskEleIndex = todos.value[listEleIndex].todos.findIndex((el) => el.taskId == payload.id)
 
-    list.value[listEleIndex].todos[taskEleIndex].taskName = payload.title
+    todos.value[listEleIndex].todos[taskEleIndex].taskName = payload.title
     disableEditMode();
 }
 
 function onCreateList(payload) {
-    list.value.push(payload);
+    todos.value.push(payload);
 }
 </script>
 
@@ -142,18 +107,18 @@ function onCreateList(payload) {
 
         <div class="todo-dashboard" :style="{ height: todoDashBoardHeight + 'px' }"
             :class="{ 'opacity': opacityDashBoard }">
-            <draggable v-model="list" group="list" class="todo-list" item-key="id" :animation="300" handle=".handle">
+            <draggable v-model="todos" group="list" class="todo-list" item-key="id" :animation="300" handle=".handle">
                 <template #item="{ element: list }">
-                    <todo-list :todoTitle="list.listName" :id="list.id" @update-title="onUpdateTitle">
-                        <draggable v-model="list.todos" class="task-group" :group="{ name: 'tasks' }" item-key="taskId"
+                    <todo-list :todoTitle="list.title" :id="list.id" @update-title="onUpdateTitle">
+                        <draggable v-model="list.tasks" class="task-group" :group="{ name: 'tasks' }" item-key="id"
                             :animation="300">
                             <template #item="{ element: task }">
                                 <div class="">
-                                    <div :id="'todo-task-' + task.taskId" class="todo-task"
-                                        @mouseenter="isHovered = true" @mouseleave="isHovered = false">
+                                    <div :id="'todo-task-' + task.id" class="todo-task" @mouseenter="isHovered = true"
+                                        @mouseleave="isHovered = false">
                                         <slot v-bind="task">
                                             <p>
-                                                <span>{{ task.taskName }}</span>
+                                                <span>{{ task.title }}</span>
                                                 <button @click="enableEditMode(list, task, $event)">
                                                     <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
                                                 </button>
@@ -164,8 +129,7 @@ function onCreateList(payload) {
                             </template>
                         </draggable>
 
-                        <TodoAddNewCard :list="list" @add-new-card-id="onAddNewCardId"
-                            @add-new-card-value="onAddNewCardValue" />
+                        <TodoAddNewCard :list="list" @add-new-card-id="onAddNewCardId" />
                     </todo-list>
                 </template>
             </draggable>

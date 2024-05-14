@@ -21,7 +21,6 @@ onUpdated(() => {
 
 function handleClick(ev) {
     if (navWorkSpaceWrapperEle.value !== undefined && navWorkSpaceWrapperEle.value.contains(ev.target)) {
-        console.log('in side');
     }
     else {
         emit('onClickOutSide', true);
