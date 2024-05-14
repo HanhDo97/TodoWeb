@@ -6,9 +6,9 @@ export const useFlashMessage = defineStore('flashMessage', {
         timeout: 5,  // Timeout in seconds
     }),
     actions: {
-        addMessage(message) {
+        addMessage(message, type = 'success') {
             this.messages.push({
-                message
+                message, type
             });
         },
         resetMessage() {

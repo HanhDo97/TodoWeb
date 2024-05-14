@@ -1,5 +1,6 @@
 <script setup>
 import FlashMessage from './components/cores/FlashMessage.vue';
+import Loader from '@/components/cores/Loader.vue';
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import FlashMessage from './components/cores/FlashMessage.vue';
 
   <RouterView />
   <FlashMessage />
+  <Loader />
 </template>
 
 <style scoped></style>

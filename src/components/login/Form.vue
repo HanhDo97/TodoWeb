@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import TokenService from '@/services/TokenService';
 import { useRouter } from 'vue-router';
 import { useFlashMessage } from '@/stores/FlassMessage';
+import UserService from '@/services/UserService';
 
 const email = ref('');
 const password = ref('');
@@ -74,7 +75,7 @@ function continueLogin() {
                 flashMessage.addMessage('Login Success')
             }
         }).catch((error) => {
-            console.log(error);
+            UserService.isIncorrectCredential(error);
             isLogging.value = false;
         })
 }

@@ -4,12 +4,9 @@ import NavTop from '../components/NavTop.vue'
 import NavSlide from '@/components/NavSlide.vue';
 import TableDashBoard from '@/components/TableDashBoard.vue';
 import UserService from '@/services/UserService';
-import { useRouter } from 'vue-router';
 import { useLoadingStore } from '@/stores/loading';
-import Loader from '@/components/cores/Loader.vue';
 
 const loadingStore = useLoadingStore();
-const router = useRouter();
 
 onMounted(() => {
     // Get user information
@@ -43,8 +40,6 @@ function handleToggleNav(hidden) {
         <NavSlide @toggle-nav-btn="handleToggleNav" />
         <TableDashBoard />
     </main>
-
-    <Loader />
 </template>
 <style>
 main {

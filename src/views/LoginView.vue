@@ -2,8 +2,16 @@
 import { onMounted } from 'vue';
 import Form from '@/components/login/Form.vue';
 import { googleOneTap, decodeCredential } from "vue3-google-login"
+import { useLoadingStore } from '@/stores/loading';
+import UserService from '@/services/UserService';
+// import { useFlashMessage } from '@/stores/FlassMessage';
+import router from '@/router/index';
+
+const loadingStore = useLoadingStore();
+// const flashMessage = useFlashMessage();
 
 onMounted(() => {
+    checkLogin();
     googleOneTap()
         .then((response) => {
             // This promise is resolved when user selects an account from the the One Tap prompt
@@ -14,9 +22,23 @@ onMounted(() => {
             console.log("Handle the error", error)
         })
 })
+
+function checkLogin() {
+    loadingStore.loading.page = true;
+    UserService.getInfor()
+        .then((res) => {
+            loadingStore.disableLoading('page');
+            router.push({
+                name: 'dashboard'
+            })
+        })
+        .catch((err) => {
+            loadingStore.disableLoading('page');
+        })
+}
 </script>
 <template>
-    <div class="login-wrapper">
+    <div v-if="loadingStore.loading.page == false" class="login-wrapper">
         <h1><font-awesome-icon icon="fa-solid fa-chart-simple" /> TodoApp</h1>
         <h3>Log in to continue</h3>
         <Form />
@@ -36,9 +58,10 @@ onMounted(() => {
     </div>
 </template>
 <style scoped>
-.g-btn-wrapper{
+.g-btn-wrapper {
     width: 100%;
 }
+
 h3 {
     margin-bottom: 1rem
 }
@@ -59,7 +82,7 @@ h3 {
     font-size: 16px;
 }
 
-.login-wrapper button:hover{
+.login-wrapper button:hover {
     cursor: pointer;
     background-color: rgba(171, 164, 164, 0.7);
     border-radius: 3px;

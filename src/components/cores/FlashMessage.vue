@@ -48,12 +48,14 @@ onUpdated(() => {
                 <p>{{ message.message }}</p>
             </div>
         </div>
-        <div :id="'timmer' + index" class="timmer"></div>
+        <div :id="'border' + index" class="border" :style="{
+            'background-color': message.type == 'error' ? 'red' : null
+        }"></div>
     </div>
 </template>
 
 <style scoped>
-.timmer {
+.border {
     margin-top: 10px;
     width: 100%;
     height: 5px;

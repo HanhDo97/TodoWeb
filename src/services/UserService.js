@@ -1,6 +1,7 @@
 import axios from 'axios';
 import TokenService from './TokenService';
-import router from '@/router/index'; // Import the router instance
+import router from '@/router/index';
+import { useFlashMessage } from '@/stores/FlassMessage';
 
 const baseURL = import.meta.env.VITE_BASE_URL
 
@@ -14,18 +15,14 @@ const httpClient = axios.create({
 
 export default {
     async getInfor() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await httpClient.get('/get', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            return response.data;
-        } catch (error) {
-            this.navigateLoginPage(error); // Call the method to navigate to login page
-            throw error; // Re-throw the error for further handling if needed
-        }
+        const token = localStorage.getItem('token');
+        const response = await httpClient.get('/get', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        return response.data;
+
     },
     logOut() {
         const token = localStorage.getItem('token');
@@ -33,7 +30,17 @@ export default {
     },
     navigateLoginPage(err) {
         if (err.response && err.response.status === 401) {
+            const flassMessage = useFlashMessage();
+            flassMessage.addMessage('Session is expired')
             router.push({ name: 'login' });
+        }
+    },
+    isIncorrectCredential(err) {
+        const flassMessage = useFlashMessage();
+        if (err.response && err.response.status === 500) {
+            if (err.response.data.success == false && err.response.error !== '') {
+                flassMessage.addMessage(err.response.data.error, 'error');
+            }
         }
     }
 }
