@@ -48,7 +48,7 @@ function saveTextVal() {
         value: textVal.value,
     }
 
-    userStore.pushNewCard(payload);
+    userStore.pushNewTask(payload);
 
     textVal.value = '';
 

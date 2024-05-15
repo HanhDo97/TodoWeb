@@ -108,6 +108,7 @@ function togglePassword() {
             <span v-if="!isLogging">Log in</span>
             <div v-else class="loader"></div>
         </button>
+        <small><i>(Demo account: user@mail.com/test321)</i></small>
     </div>
 </template>
 <style scoped>

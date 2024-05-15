@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid';
+import TodoService from '@/services/TodoService';
+import TaskService from '@/services/TaskService';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -25,25 +27,41 @@ export const useUserStore = defineStore('user', {
         },
         pushNewList(payload) {
             this.todos.push(payload);
+
+            TodoService.create(payload, this.infor)
         },
-        pushNewCard(payload) {
+        pushNewTask(payload) {
             let task = {
                 id: nanoid(),
-                title: payload.value
+                title: payload.value,
             }
             let listIndex = this.todos.findIndex((el) => el.id == payload.id);
             this.todos[listIndex].tasks.push(task)
+
+            TaskService.create(task, payload.id)
         },
         updateTask(payload) {
             let listEleIndex = this.todos.findIndex((el) => el.id == payload.idList)
             let taskEleIndex = this.todos[listEleIndex].tasks.findIndex((el) => el.id == payload.id)
 
             this.todos[listEleIndex].tasks[taskEleIndex].title = payload.title
+
+            console.log(payload);
+            TaskService.update(payload, payload.id)
         },
-        updateList(payload){
+        updateList(payload) {
             let listEleIndex = this.todos.findIndex((el) => el.id == payload.id)
-            
+
             this.todos[listEleIndex].title = payload.title;
+
+            TodoService.update(payload)
+        },
+
+        updateTaskId(listId, oldId, newId) {
+            let listEleIndex = this.todos.findIndex((el) => el.id == listId)
+            let taskEleIndex = this.todos[listEleIndex].tasks.findIndex((el) => el.id == oldId)
+
+            this.todos[listEleIndex].tasks[taskEleIndex].id = newId;
         }
     }
 })
