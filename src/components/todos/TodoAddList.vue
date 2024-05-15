@@ -5,11 +5,10 @@ import { ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
-const id = ref(nanoid());
+const id = ref('');
 const hideAddList = ref(true);
 
 function onUpdateTitle(payload) {
-    console.log(payload);
     if (payload.title == '') {
         onCloseAddList();
     }
@@ -29,6 +28,7 @@ function onCloseAddList() {
     hideAddList.value = true;
 }
 function showAddList() {
+    id.value = nanoid();
     hideAddList.value = false;
 }
 </script>

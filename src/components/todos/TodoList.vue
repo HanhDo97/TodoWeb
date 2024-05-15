@@ -40,7 +40,7 @@ function onBlurCallback() {
     editStatus.value = false;
 
     // Update Title
-    if (title.value !== props.todoTitle || title.value !== '') {
+    if (title.value !== props.todoTitle && title.value !== '') {
         let payload = {
             id: props.id,
             title: title.value

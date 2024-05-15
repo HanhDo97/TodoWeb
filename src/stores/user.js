@@ -46,7 +46,6 @@ export const useUserStore = defineStore('user', {
 
             this.todos[listEleIndex].tasks[taskEleIndex].title = payload.title
 
-            console.log(payload);
             TaskService.update(payload, payload.id)
         },
         updateList(payload) {
