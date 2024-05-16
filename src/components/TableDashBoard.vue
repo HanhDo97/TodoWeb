@@ -64,17 +64,6 @@ function disableEditMode() {
     showEditTextArea.value = false;
 }
 
-// function determine which list is on add new card
-function onAddNewCardId(id) {
-    todos.value.forEach((el) => {
-        if (el.id == id) {
-            el.addNewCardStatus = true;
-        } else {
-            el.addNewCardStatus = false;
-        }
-    })
-}
-
 function isUpdateSuccess(bool) {
     if (bool) {
         disableEditMode();
@@ -117,7 +106,7 @@ function onUpdateTitle(payload) {
                             </template>
                         </draggable>
 
-                        <TodoAddNewCard :list="list" @add-new-card-id="onAddNewCardId" />
+                        <TodoAddNewCard :list="list"/>
                     </todo-list>
                 </template>
             </draggable>

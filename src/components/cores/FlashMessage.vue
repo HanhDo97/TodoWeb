@@ -1,10 +1,11 @@
 <script setup>
-import { onUpdated, ref } from 'vue';
+import { computed, onUpdated, ref } from 'vue';
 import { useFlashMessage } from '@/stores/FlassMessage';
 import { storeToRefs } from 'pinia';
 
 const flashMessage = useFlashMessage();
 const { messages } = storeToRefs(flashMessage);
+const isHoveringMap = ref(new Map());
 
 onUpdated(() => {
     setTimeout(() => {
@@ -13,17 +14,39 @@ onUpdated(() => {
         flashEls.forEach((el, index) => {
             if (!el.classList.contains('animate-to-top')) {
                 el.classList.add('animate-to-top');
+                let bar = el.querySelector('.round-time-bar');
+                let timeBar = el.querySelector('.round-time-bar div');
 
-                let timeout = flashMessage.timeout;
+                // set Message
+                let timeout = el.querySelector('.timeout').textContent;
+                let type = el.querySelector('.type').textContent;
+                console.log(timeout);
+                bar.style.setProperty('--duration', timeout);
+                bar.setAttribute('data-color', type == 'error' ? 'red' : '#25b065');
+
+
+                // Initialize hover state
+                isHoveringMap.value.set(el, false);
+
+                // Add event listeners to handle hovering
+                el.addEventListener('mouseenter', () => {
+                    isHoveringMap.value.set(el, true);
+                    timeBar.style.animationPlayState = 'paused';
+                });
+                el.addEventListener('mouseleave', () => {
+                    isHoveringMap.value.set(el, false);
+                    timeBar.style.animationPlayState = 'running';
+                });
 
                 var countDown = setInterval(() => {
-                    timeout--;
-
-                    if (timeout <= 0) {
+                    if (!isHoveringMap.value.get(el)) {
+                        timeout--;
+                    }
+                    if (timeout <= 0 && !isHoveringMap.value.get(el)) {
                         el.style.display = 'none';
                         clearInterval(countDown);
 
-                        // If all element was hiddened then reset message bag
+                        // If all elements were hidden then reset the message bag
                         if (index == flashEls.length - 1) {
                             flashMessage.resetMessage();
                         }
@@ -36,35 +59,99 @@ onUpdated(() => {
             }
         })
     }, 0);
-})
+});
+
 </script>
 
 <template>
     <div v-for="(message, index) in messages" :key="index" name="flash-wrapper" class="flash-wrapper"
         :style="{ bottom: message.bottom + 'px' }">
         <div class="content">
-            <div class="icon"></div>
+            <div class="timeout" style="display: none;">{{ message.timeout }}</div>
+            <div class="type" style="display: none;">{{ message.type }}</div>
             <div class="text">
+                <div v-if="message.isLoading && message.type === 'loading'" class="loader">
+                </div>
+                <div v-else-if="message.isLoading && message.type === 'error'" style="color: brown;">
+                    <font-awesome-icon icon="fa-solid fa-circle-xmark" />
+                </div>
+                <div v-else-if="message.isLoading && message.type === 'success'" style="color: aquamarine;">
+                    <font-awesome-icon icon="fa-solid fa-circle-check" />
+                </div>
+                <div v-else class=""></div>
                 <p>{{ message.message }}</p>
             </div>
         </div>
-        <div :id="'border' + index" class="border" :style="{
-            'background-color': message.type == 'error' ? 'red' : null
-        }"></div>
+        <div class="round-time-bar" data-style="smooth">
+            <div></div>
+        </div>
     </div>
 </template>
 
 <style scoped>
+.round-time-bar {
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+.round-time-bar div {
+    height: 5px;
+    transform-origin: left center;
+    /* background: #25b065; */
+}
+
+.round-time-bar[data-color="red"] div {
+    background: red;
+}
+
+.round-time-bar[data-color="#25b065"] div {
+    background: #25b065;
+}
+
+.round-time-bar[data-style="smooth"] div {
+    animation: roundtime calc(var(--duration) * 1s) linear forwards;
+}
+
+@keyframes roundtime {
+    to {
+        /* More performant than `width` */
+        transform: scaleX(0);
+    }
+}
+
+.loader {
+    width: 25px;
+    padding: 8px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #25b065;
+    --_m:
+        conic-gradient(#0000 10%, #000),
+        linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    -webkit-mask-composite: source-out;
+    mask-composite: subtract;
+    animation: l3 1s infinite linear;
+}
+
+@keyframes l3 {
+    to {
+        transform: rotate(1turn)
+    }
+}
+
 .border {
     margin-top: 10px;
-    width: 100%;
     height: 5px;
-    background-color: rgb(60, 255, 0);
+    width: 100%;
 }
 
 .text {
     font-size: 16px;
     color: rgb(255, 255, 255);
+    display: flex;
+    gap: 1rem;
 }
 
 .flash-wrapper {

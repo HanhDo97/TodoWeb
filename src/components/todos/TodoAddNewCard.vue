@@ -9,18 +9,19 @@ const textVal = ref('');
 const textareaElement = ref(undefined);
 const addNewCardWrapperName = 'add-new-card-wrapper-' + list.id;
 const todoAddcardName = 'todo-add-card-' + list.id;
-const emit = defineEmits(['addNewCardId', 'addNewCardValue']);
 
 onUpdated(() => {
     textareaElement.value = document.getElementsByName(todoAddcardName)[0];
     if (textareaElement.value !== undefined) {
         textareaElement.value.focus();
 
-        window.addEventListener('click', clickHandler)
+        window.addEventListener('click', clickHandler);
+        textareaElement.value.addEventListener('blur', clickHandler);
     }
     else {
         window.removeEventListener('click', clickHandler);
     }
+
 });
 
 // event using hide text area when user click outside of div
@@ -34,8 +35,9 @@ function clickHandler(event) {
     }
 }
 function displayAddNewCardTemplate(ev) {
-    // emit to the parent so the parent know which list does the user click
-    emit('addNewCardId', list.id);
+    list.addNewCardStatus = true;
+
+    userStore.showAddNewCardTemplate(list.id);
 
     ev.stopPropagation();
 }
@@ -43,6 +45,10 @@ function hideAddNewCardTemplate() {
     list.addNewCardStatus = false;
 }
 function saveTextVal() {
+    if (textVal.value == '') {
+        return;
+    }
+
     let payload = {
         id: list.id,
         value: textVal.value,

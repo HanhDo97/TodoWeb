@@ -72,7 +72,7 @@ function continueLogin() {
                     });
                 }, 0);
 
-                flashMessage.addMessage('Login Success')
+                flashMessage.addMessage({ message: 'Login Success' })
             }
         }).catch((error) => {
             UserService.isIncorrectCredential(error);

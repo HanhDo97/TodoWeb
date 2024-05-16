@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useFlashMessage } from '@/stores/FlassMessage';
 import { useUserStore } from '@/stores/user';
+import { nanoid } from 'nanoid';
 
 const baseURL = import.meta.env.VITE_BASE_URL
 const httpClient = axios.create({
@@ -11,13 +12,40 @@ const httpClient = axios.create({
     }
 });
 
+function updateMessageSuccess(idMessage) {
+    const flashMessage = useFlashMessage();
+    flashMessage.updateMessage(idMessage, {
+        message: 'Synchronized',
+        type: 'success'
+    });
+}
+function updateErrorMessage(idMessage) {
+    const flashMessage = useFlashMessage();
+    flashMessage.updateMessage(idMessage, {
+        message: 'Error occurred, your changes wil not be saved',
+        type: 'error'
+    });
+}
+function addMessageLoading(idMessage){
+    const flashMessage = useFlashMessage();
+    flashMessage.addMessage({
+        message: 'Synchronizing',
+        type: 'loading',
+        isLoading: true,
+        id: idMessage
+    });
+}
+
 export default {
     create(task, todoId) {
+        const idMessage = nanoid();
         const token = localStorage.getItem('token');
         const data = {
             'title': task.title,
             'todo_id': todoId
         }
+
+        addMessageLoading(idMessage);
         httpClient.post('', data, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -26,23 +54,24 @@ export default {
             const userStore = useUserStore();
             userStore.updateTaskId(res.data.data.todo_id, task.id, res.data.data.id);
 
-            const flashMessage = useFlashMessage();
-            flashMessage.addMessage('Synchronized')
-        }).catch(error => {
-            console.log(error);
+            updateMessageSuccess(idMessage);
+        }).catch(() => {
+            updateErrorMessage(idMessage)
         });
     },
-    update(data, id){
+    update(data, id) {
+        const idMessage = nanoid();
         const token = localStorage.getItem('token');
+
+        addMessageLoading(idMessage);
         httpClient.put(`/${id}`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         }).then(() => {
-            const flashMessage = useFlashMessage();
-            flashMessage.addMessage('Synchronized')
-        }).catch(error => {
-            console.log(error);
+            updateMessageSuccess(idMessage);
+        }).catch(() => {
+            updateErrorMessage(idMessage);
         });
     }
 }

@@ -6,6 +6,7 @@ import TableDashBoard from '@/components/TableDashBoard.vue';
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loading';
+import NetworkService from '@/services/NetworkService';
 
 const loadingStore = useLoadingStore();
 const userStore = useUserStore();
@@ -19,6 +20,7 @@ onMounted(() => {
         })
         .catch((err) => {
             UserService.navigateLoginPage(err);
+            NetworkService.errorConnection(err);
             loadingStore.disableLoading('page');
         })
 })

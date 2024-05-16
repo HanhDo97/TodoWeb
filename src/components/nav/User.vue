@@ -4,6 +4,7 @@ import { onMounted, ref, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLoadingStore } from '@/stores/loading';
 import { useFlashMessage } from '@/stores/FlassMessage';
+import NetworkService from '@/services/NetworkService';
 
 const flashMessage = useFlashMessage();
 const loadingStore = useLoadingStore();
@@ -44,9 +45,10 @@ function logOut() {
                 name: "login"
             });
 
-            flashMessage.addMessage('Logged out')
+            flashMessage.addMessage({ message: 'Logged out' })
         }).catch((err) => {
             UserService.navigateLoginPage(err);
+            NetworkService.errorConnection(err);
             loadingStore.disableLoading('http');
         })
 

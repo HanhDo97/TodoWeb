@@ -31,7 +31,7 @@ export default {
     navigateLoginPage(err) {
         if (err.response && err.response.status === 401) {
             const flassMessage = useFlashMessage();
-            flassMessage.addMessage('Session is expired')
+            flassMessage.addMessage({ message: 'Session is expired' })
             router.push({ name: 'login' });
         }
     },
@@ -39,7 +39,7 @@ export default {
         const flassMessage = useFlashMessage();
         if (err.response && err.response.status === 500) {
             if (err.response.data.success == false && err.response.error !== '') {
-                flassMessage.addMessage(err.response.data.error, 'error');
+                flassMessage.addMessage({ message: err.response.data.error, type: 'error' });
             }
         }
     }

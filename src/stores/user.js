@@ -61,6 +61,17 @@ export const useUserStore = defineStore('user', {
             let taskEleIndex = this.todos[listEleIndex].tasks.findIndex((el) => el.id == oldId)
 
             this.todos[listEleIndex].tasks[taskEleIndex].id = newId;
+        },
+        showAddNewCardTemplate(id) {
+            this.todos.forEach((el) => {
+                if (el.id !== id) {
+                    el.addNewCardStatus = false;
+                }
+            });
+        },
+        getTodoById(id){
+            let i =this.todos.findIndex(el=>el.id == id);
+            return this.todos[i];
         }
     }
 })
