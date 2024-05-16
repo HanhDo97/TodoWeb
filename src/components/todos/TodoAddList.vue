@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import { useProjectStore } from '@/stores/project';
 
 const projectStore = useProjectStore();
+const props = defineProps(['totalList']);
 const id = ref('');
 const hideAddList = ref(true);
 
@@ -17,8 +18,9 @@ function onUpdateTitle(payload) {
             id: payload.id,
             title: payload.title,
             tasks: [],
+            order: props.totalList + 1
         }
-        
+
         projectStore.pushNewList(data);
 
         onCloseAddList();

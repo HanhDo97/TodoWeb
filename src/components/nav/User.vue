@@ -51,7 +51,7 @@ function logOut() {
 
             flashMessage.addMessage({ message: 'Logged out' })
         }).catch((err) => {
-            UserService.navigateLoginPage(err);
+            NetworkService.unAuthorized(err);
             NetworkService.errorConnection(err);
             loadingStore.disableLoading('http');
         })

@@ -8,9 +8,12 @@ import TodoAddList from './todos/TodoAddList.vue';
 import draggable from "vuedraggable/dist/vuedraggable.common";
 import { useProjectStore } from '@/stores/project';
 import { storeToRefs } from 'pinia';
+import PositionService from '@/services/PositionService';
+import TaskService from '@/services/TaskService';
 
 const projectStore = useProjectStore();
-const { todos } = storeToRefs(projectStore);
+const { todos, currentProject } = storeToRefs(projectStore);
+const totalList = todos.value.length;
 const isHovered = ref(false);
 const opacityDashBoard = ref(false);
 const showEditTextArea = ref(false);
@@ -74,7 +77,30 @@ function onUpdateTitle(payload) {
     projectStore.updateList(payload);
 }
 function onGroupsChange() {
-    console.log('change');
+    let newTodos = todos.value.map((el, index) => {
+        let ob = {
+            id: el.id,
+            title: el.title,
+            order: index
+        }
+        return ob;
+    });
+
+    let payload = {
+        todos: newTodos,
+        project_id: currentProject.value.id
+    }
+
+    PositionService.updateTodos(payload);
+}
+
+function onTaskChange(list, event) {
+    const { added } = event;
+    
+    if (added) {
+        PositionService.updateTask(list, added.element);
+    }
+
 }
 </script>
 
@@ -93,7 +119,7 @@ function onGroupsChange() {
                 <template #item="{ element: list }">
                     <todo-list :todoTitle="list.title" :id="list.id" @update-title="onUpdateTitle">
                         <draggable v-model="list.tasks" class="task-group" :group="{ name: 'tasks' }" item-key="id"
-                            :animation="300">
+                            :animation="300" @change="onTaskChange(list, $event)">
                             <template #item="{ element: task }">
                                 <div class="">
                                     <div :id="'todo-task-' + task.id" class="todo-task" @mouseenter="isHovered = true"
@@ -116,7 +142,7 @@ function onGroupsChange() {
                 </template>
             </draggable>
 
-            <TodoAddList />
+            <TodoAddList :totalList="totalList" />
 
         </div>
     </div>

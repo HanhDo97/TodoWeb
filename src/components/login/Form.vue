@@ -61,10 +61,10 @@ function continueLogin() {
     TokenService.getToken(credential)
         .then((res) => {
             isLogging.value = false;
-            if (res.data.data.token != undefined &&
-                res.data.data.token != ''
+            if (res.data.token != undefined &&
+                res.data.token != ''
             ) {
-                localStorage.setItem('token', res.data.data.token);
+                localStorage.setItem('token', res.data.token);
 
                 setTimeout(() => {
                     router.push({

@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 
 const projectStore = useProjectStore();
 const { currentProject } = storeToRefs(projectStore);
+
 </script>
 <template>
     <div class="project-about-wrapper">

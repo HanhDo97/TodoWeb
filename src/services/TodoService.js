@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useFlashMessage } from '@/stores/FlassMessage';
 import { nanoid } from 'nanoid';
+import MessageService from './MessageService';
 
 const baseURL = import.meta.env.VITE_BASE_URL
 const httpClient = axios.create({
@@ -11,63 +11,44 @@ const httpClient = axios.create({
     }
 });
 
-function updateMessageSuccess(idMessage) {
-    const flashMessage = useFlashMessage();
-    flashMessage.updateMessage(idMessage, {
-        message: 'Synchronized',
-        type: 'success'
-    });
-}
-function updateErrorMessage(idMessage) {
-    const flashMessage = useFlashMessage();
-    flashMessage.updateMessage(idMessage, {
-        message: 'Error occurred, your changes wil not be saved',
-        type: 'error'
-    });
-}
-function addMessageLoading(idMessage) {
-    const flashMessage = useFlashMessage();
-    flashMessage.addMessage({
-        message: 'Synchronizing',
-        type: 'loading',
-        isLoading: true,
-        id: idMessage
-    });
-}
+function sendPostRequest(url, data, idMessage) {
+    const token = localStorage.getItem('token');
 
+    httpClient.post(url, data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }).then(() => {
+        MessageService.updateMessageSuccess(idMessage);
+    }).catch(() => {
+        MessageService.updateErrorMessage(idMessage);
+    });
+}
 export default {
     create(todo, project) {
         const idMessage = nanoid();
 
-        addMessageLoading(idMessage)
-        const token = localStorage.getItem('token');
+        MessageService.addMessageLoading(idMessage)
         const data = {
             'title': todo.title,
-            'project_id': project.id
+            'project_id': project.id,
+            'order': todo.order
         }
-        httpClient.post('', data, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }).then(() => {
-            updateMessageSuccess(idMessage);
-        }).catch(() => {
-            updateErrorMessage(idMessage);
-        });
+        sendPostRequest('', data, idMessage);
     },
     update(data) {
         const idMessage = nanoid();
         const token = localStorage.getItem('token');
 
-        addMessageLoading(idMessage)
+        MessageService.addMessageLoading(idMessage)
         httpClient.put(`/${data.id}`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         }).then(() => {
-            updateMessageSuccess(idMessage);
+            MessageService.updateMessageSuccess(idMessage);
         }).catch(() => {
-            updateErrorMessage(idMessage);
+            MessageService.updateErrorMessage(idMessage);
         });
     }
 }

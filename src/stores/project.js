@@ -17,7 +17,10 @@ export const useProjectStore = defineStore('project', {
             // Set the last project
             let { cookies } = useCookies();
             let lastProjectId = cookies.get('last_project');
-            let index = this.projects.findIndex(el => el.id == lastProjectId);
+            let index = 0;
+            if (lastProjectId !== null) {
+                index = this.projects.findIndex(el => el.id == lastProjectId);
+            }
             this.currentProject = this.projects[index];
 
             this.todos = this.currentProject.todos
