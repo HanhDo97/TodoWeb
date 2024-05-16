@@ -1,8 +1,8 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { useUserStore } from '@/stores/user';
+import { useProjectStore } from '@/stores/project';
 
-const userStore = useUserStore();
+const projectStore = useProjectStore();
 const props = defineProps(['taskToEdit', 'listToEdit','todoDashBoardHeight']);
 const emit = defineEmits(['isUpdateSuccess']);
 const title = ref(props.taskToEdit.title)
@@ -32,7 +32,7 @@ function updateTask() {
             title: title.value,
         }
 
-        userStore.updateTask(payload);
+        projectStore.updateTask(payload);
                 
         emit('isUpdateSuccess', true);
     }

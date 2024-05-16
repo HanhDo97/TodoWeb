@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useFlashMessage } from '@/stores/FlassMessage';
-import { useUserStore } from '@/stores/user';
 import { nanoid } from 'nanoid';
+import { useProjectStore } from '@/stores/project';
 
 const baseURL = import.meta.env.VITE_BASE_URL
 const httpClient = axios.create({
@@ -51,8 +51,8 @@ export default {
                 Authorization: `Bearer ${token}`,
             },
         }).then((res) => {
-            const userStore = useUserStore();
-            userStore.updateTaskId(res.data.data.todo_id, task.id, res.data.data.id);
+            const projectStore = useProjectStore();
+            projectStore.updateTaskId(res.data.data.todo_id, task.id, res.data.data.id);
 
             updateMessageSuccess(idMessage);
         }).catch(() => {

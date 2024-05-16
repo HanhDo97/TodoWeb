@@ -1,8 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useUserStore } from '@/stores/user';
 
-const userStore = useUserStore();
 const props = defineProps({
     todoTitle: {
         type: String,
@@ -54,6 +52,7 @@ function onBlurCallback() {
 }
 function onEnterKeyPress(event) {
     if (event.key === "Enter") {
+        inputEl.value.removeEventListener('blur', onBlurCallback);
         onBlurCallback();
     }
 }

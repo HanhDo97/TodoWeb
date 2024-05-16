@@ -5,7 +5,12 @@ import { useRouter } from 'vue-router';
 import { useLoadingStore } from '@/stores/loading';
 import { useFlashMessage } from '@/stores/FlassMessage';
 import NetworkService from '@/services/NetworkService';
+import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
 
+const userStore = useUserStore();
+const { infor } = storeToRefs(userStore);
+console.log(infor);
 const flashMessage = useFlashMessage();
 const loadingStore = useLoadingStore();
 const props = defineProps(['bottom', 'right', 'top']);
@@ -68,7 +73,7 @@ function logOut() {
                         </div>
                         <div class="name-container">
                             <p>Account Name</p>
-                            <p>example@gmail.com</p>
+                            <p>{{ infor.email }}</p>
                         </div>
                     </div>
                     <ul>

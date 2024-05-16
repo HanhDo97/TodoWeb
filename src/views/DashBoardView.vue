@@ -6,8 +6,10 @@ import TableDashBoard from '@/components/TableDashBoard.vue';
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loading';
+import { useProjectStore } from '@/stores/project';
 import NetworkService from '@/services/NetworkService';
 
+const projectStore = useProjectStore();
 const loadingStore = useLoadingStore();
 const userStore = useUserStore();
 
@@ -15,11 +17,12 @@ onMounted(() => {
     // Get user information
     UserService.getInfor()
         .then((res) => {
+            projectStore.initProject(res.data.projects);
             userStore.setupUser(res.data);
             loadingStore.disableLoading('page');
         })
         .catch((err) => {
-            UserService.navigateLoginPage(err);
+            NetworkService.unAuthorized(err);
             NetworkService.errorConnection(err);
             loadingStore.disableLoading('page');
         })

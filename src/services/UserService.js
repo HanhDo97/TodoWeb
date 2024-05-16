@@ -1,6 +1,5 @@
 import axios from 'axios';
 import TokenService from './TokenService';
-import router from '@/router/index';
 import { useFlashMessage } from '@/stores/FlassMessage';
 
 const baseURL = import.meta.env.VITE_BASE_URL
@@ -27,13 +26,6 @@ export default {
     logOut() {
         const token = localStorage.getItem('token');
         return TokenService.revokeToken(token);
-    },
-    navigateLoginPage(err) {
-        if (err.response && err.response.status === 401) {
-            const flassMessage = useFlashMessage();
-            flassMessage.addMessage({ message: 'Session is expired' })
-            router.push({ name: 'login' });
-        }
     },
     isIncorrectCredential(err) {
         const flassMessage = useFlashMessage();

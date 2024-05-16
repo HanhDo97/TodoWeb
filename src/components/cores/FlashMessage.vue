@@ -20,7 +20,6 @@ onUpdated(() => {
                 // set Message
                 let timeout = el.querySelector('.timeout').textContent;
                 let type = el.querySelector('.type').textContent;
-                console.log(timeout);
                 bar.style.setProperty('--duration', timeout);
                 bar.setAttribute('data-color', type == 'error' ? 'red' : '#25b065');
 

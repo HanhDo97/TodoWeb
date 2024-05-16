@@ -1,16 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import ProjectAbout from './todos/ProjectAbout.vue';
 import TodoList from './todos/TodoList.vue';
-import TodoEdit from './todos/TodoEdit.vue';
+import TaskEdit from './todos/TaskEdit.vue';
 import TodoAddNewCard from './todos/TodoAddNewCard.vue';
 import TodoAddList from './todos/TodoAddList.vue';
 import draggable from "vuedraggable/dist/vuedraggable.common";
-import { useUserStore } from '@/stores/user';
+import { useProjectStore } from '@/stores/project';
 import { storeToRefs } from 'pinia';
 
-const userStore = useUserStore();
-const { todos } = storeToRefs(userStore);
+const projectStore = useProjectStore();
+const { todos } = storeToRefs(projectStore);
 const isHovered = ref(false);
 const opacityDashBoard = ref(false);
 const showEditTextArea = ref(false);
@@ -36,6 +36,7 @@ onMounted(() => {
             disableEditMode();
         }
     });
+
 })
 
 // calculate height of todo-dashboard
@@ -70,13 +71,16 @@ function isUpdateSuccess(bool) {
     }
 }
 function onUpdateTitle(payload) {
-    userStore.updateList(payload);
+    projectStore.updateList(payload);
+}
+function onGroupsChange() {
+    console.log('change');
 }
 </script>
 
 <template>
     <div class="table-dashboard-wrapper slide-right-to">
-        <TodoEdit v-if="showEditTextArea" :taskToEdit="taskToEdit" :listToEdit="listToEdit"
+        <TaskEdit v-if="showEditTextArea" :taskToEdit="taskToEdit" :listToEdit="listToEdit"
             :todoDashBoardHeight="todoDashBoardHeight" @is-update-success="isUpdateSuccess" :key="taskToEdit.id"
             class="todo-edit" />
 
@@ -84,7 +88,8 @@ function onUpdateTitle(payload) {
 
         <div class="todo-dashboard" :style="{ height: todoDashBoardHeight + 'px' }"
             :class="{ 'opacity': opacityDashBoard }">
-            <draggable v-model="todos" group="list" class="todo-list" item-key="id" :animation="300" handle=".handle">
+            <draggable v-model="todos" group="list" class="todo-list" item-key="id" :animation="300" handle=".handle"
+                @change="onGroupsChange">
                 <template #item="{ element: list }">
                     <todo-list :todoTitle="list.title" :id="list.id" @update-title="onUpdateTitle">
                         <draggable v-model="list.tasks" class="task-group" :group="{ name: 'tasks' }" item-key="id"
@@ -106,7 +111,7 @@ function onUpdateTitle(payload) {
                             </template>
                         </draggable>
 
-                        <TodoAddNewCard :list="list"/>
+                        <TodoAddNewCard :list="list" />
                     </todo-list>
                 </template>
             </draggable>

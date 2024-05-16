@@ -2,9 +2,9 @@
 import TodoList from './TodoList.vue';
 import { nanoid } from 'nanoid';
 import { ref } from 'vue';
-import { useUserStore } from '@/stores/user';
+import { useProjectStore } from '@/stores/project';
 
-const userStore = useUserStore();
+const projectStore = useProjectStore();
 const id = ref('');
 const hideAddList = ref(true);
 
@@ -19,7 +19,7 @@ function onUpdateTitle(payload) {
             tasks: [],
         }
         
-        userStore.pushNewList(data);
+        projectStore.pushNewList(data);
 
         onCloseAddList();
     }

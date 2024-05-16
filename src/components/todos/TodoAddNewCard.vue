@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onUpdated } from 'vue';
-import { useUserStore } from '@/stores/user';
+import { useProjectStore } from '@/stores/project';
 
-const userStore = useUserStore();
+const projectStore = useProjectStore();
 const props = defineProps(['list']);
 const list = props.list;
 const textVal = ref('');
@@ -37,7 +37,7 @@ function clickHandler(event) {
 function displayAddNewCardTemplate(ev) {
     list.addNewCardStatus = true;
 
-    userStore.showAddNewCardTemplate(list.id);
+    projectStore.showAddNewCardTemplate(list.id);
 
     ev.stopPropagation();
 }
@@ -54,18 +54,26 @@ function saveTextVal() {
         value: textVal.value,
     }
 
-    userStore.pushNewTask(payload);
+    projectStore.pushNewTask(payload);
 
     textVal.value = '';
 
     textareaElement.value.focus();
 };
+function handleKeydown(event) {
+    if (event.shiftKey && event.key === 'Enter') {
+        event.preventDefault(); // Prevent the default behavior of adding a new line
+        saveTextVal();
+    }
+}
 
 </script>
 <template>
     <div :name="addNewCardWrapperName">
         <div v-if="list.addNewCardStatus" class="textarea-add-card">
-            <textarea v-model="textVal" class="textarea" :name="todoAddcardName" id="" cols="30" rows="2"></textarea>
+            <!-- add event press shift enter will trigger saveTextVal -->
+            <textarea v-model="textVal" class="textarea" :name="todoAddcardName" id="" cols="30" rows="2"
+                @keydown="handleKeydown($event)"></textarea>
         </div>
 
         <div class="todo-action">
