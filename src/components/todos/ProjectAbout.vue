@@ -1,8 +1,15 @@
+<script setup>
+import { useProjectStore } from '@/stores/project';
+import { storeToRefs } from 'pinia';
+
+const projectStore = useProjectStore();
+const { currentProject } = storeToRefs(projectStore);
+</script>
 <template>
     <div class="project-about-wrapper">
         <div class="about-left">
             <button>
-                <h3>Todo Project</h3>
+                <h3>{{ currentProject !== null ? currentProject.title : '' }}</h3>
             </button>
             <button>
                 <font-awesome-icon icon="fa-solid fa-star" />

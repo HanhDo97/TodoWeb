@@ -1,3 +1,34 @@
+<script setup>
+import { ref } from 'vue';
+import { useProjectStore } from '@/stores/project';
+import { storeToRefs } from 'pinia';
+import { useCookies } from "vue3-cookies";
+
+const { cookies } = useCookies();
+const emit = defineEmits(['toggleNavBtn']);
+const projectStore = useProjectStore();
+const { projects } = storeToRefs(projectStore);
+
+let hidden = ref(true);
+
+function handleToggleNav() {
+    hidden.value = !hidden.value;
+
+    if (hidden.value == false) {
+        emit('toggleNavBtn', hidden.value);
+    } else {
+        setTimeout(() => {
+            emit('toggleNavBtn', hidden.value);
+        }, 200);
+    }
+}
+function changeProject(idProject) {
+    projectStore.changeProject(idProject);
+
+    // Update cookies
+    cookies.set('last_project', idProject);
+}
+</script>
 <template>
     <div class="nav-slide-warrper" :class="[hidden ? 'slide-leave slide-leave-to slide-leave-from' :
         'slide-enter slide-enter-to slide-enter-from']">
@@ -49,9 +80,9 @@
             </ul>
             <ul class="user-boards">
                 <p>Your broads</p>
-                <li><a href="">Project 1</a></li>
-                <li><a href="">Project 2</a></li>
-                <li><a href="">Project 3</a></li>
+                <li v-for="(project, index) in projects" :key="index" @click="changeProject(project.id)">
+                    <a>{{ project.title }}</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -106,10 +137,15 @@ ul {
 li {
     padding-left: 1rem;
     cursor: pointer;
+    transition: 0.4s;
 }
 
 li:hover {
-    background-color: gray;
+    background-color: #5b8d53;
+}
+
+li:hover a {
+    color: whitesmoke;
 }
 
 .image-container {
@@ -171,23 +207,3 @@ li:hover {
     border-radius: 50%;
 }
 </style>
-
-<script setup>
-import { ref } from 'vue';
-
-const emit = defineEmits(['toggleNavBtn']);
-
-let hidden = ref(true);
-
-function handleToggleNav() {
-    hidden.value = !hidden.value;
-
-    if (hidden.value == false) {
-        emit('toggleNavBtn', hidden.value);
-    } else {
-        setTimeout(() => {
-            emit('toggleNavBtn', hidden.value);
-        }, 200);
-    }
-}
-</script>

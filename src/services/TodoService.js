@@ -36,14 +36,14 @@ function addMessageLoading(idMessage) {
 }
 
 export default {
-    create(todo, user) {
+    create(todo, project) {
         const idMessage = nanoid();
 
         addMessageLoading(idMessage)
         const token = localStorage.getItem('token');
         const data = {
             'title': todo.title,
-            'user_id': user.id
+            'project_id': project.id
         }
         httpClient.post('', data, {
             headers: {

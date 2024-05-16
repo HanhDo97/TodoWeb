@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', {
             this.infor.email = serverResponse.email;
             this.infor.name = serverResponse.name;
             this.infor.privilege_id = serverResponse.privilege_id;
+
         },
         
     }

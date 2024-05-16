@@ -17,7 +17,7 @@ const inputEl = ref(null)
 
 onMounted(() => {
     if (props.todoTitle == '') {
-        editTitleEnable()
+        editTitleEnable();
     }
 })
 
@@ -34,26 +34,38 @@ function editTitleEnable() {
         inputEl.value.addEventListener('keypress', onEnterKeyPress);
     }, 0)
 }
+
 function onBlurCallback() {
-    editStatus.value = false;
+    // Ensure editStatus is true before proceeding
+    if (editStatus.value) {
+        editStatus.value = false;
 
-    // Update Title
-    if (title.value !== props.todoTitle && title.value !== '') {
-        let payload = {
-            id: props.id,
-            title: title.value
+        // Update Title
+        if (title.value !== props.todoTitle && title.value !== '') {
+            let payload = {
+                id: props.id,
+                title: title.value
+            }
+            emit('updateTitle', payload);
+        } else {
+            emit('closeAddList', true);
         }
-        emit('updateTitle', payload)
-    } else {
-        emit('closeAddList', true)
-    }
 
-    inputEl.value.removeEventListener('blur', onBlurCallback);
+        // Remove event listeners
+        inputEl.value.removeEventListener('blur', onBlurCallback);
+        inputEl.value.removeEventListener('keypress', onEnterKeyPress);
+    }
 }
+
 function onEnterKeyPress(event) {
     if (event.key === "Enter") {
-        inputEl.value.removeEventListener('blur', onBlurCallback);
-        onBlurCallback();
+        // Prevent default form submission if any
+        event.preventDefault();
+
+        // Only call onBlurCallback if editStatus is still true
+        if (editStatus.value) {
+            onBlurCallback();
+        }
     }
 }
 </script>

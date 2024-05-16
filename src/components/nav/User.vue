@@ -10,7 +10,6 @@ import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 const { infor } = storeToRefs(userStore);
-console.log(infor);
 const flashMessage = useFlashMessage();
 const loadingStore = useLoadingStore();
 const props = defineProps(['bottom', 'right', 'top']);
@@ -72,7 +71,7 @@ function logOut() {
                             <img src="/src/assets/logo.svg" alt="">
                         </div>
                         <div class="name-container">
-                            <p>Account Name</p>
+                            <p>{{infor.name}}</p>
                             <p>{{ infor.email }}</p>
                         </div>
                     </div>

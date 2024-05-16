@@ -17,8 +17,9 @@ onMounted(() => {
     // Get user information
     UserService.getInfor()
         .then((res) => {
-            projectStore.initProject(res.data.projects);
-            userStore.setupUser(res.data);
+            console.log(res);
+            projectStore.initProject(res.projects);
+            userStore.setupUser(res);
             loadingStore.disableLoading('page');
         })
         .catch((err) => {

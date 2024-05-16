@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid';
 import TodoService from '@/services/TodoService';
 import TaskService from '@/services/TaskService';
+import { useCookies } from "vue3-cookies";
 
 export const useProjectStore = defineStore('project', {
     state: () => ({
@@ -12,8 +13,19 @@ export const useProjectStore = defineStore('project', {
     actions: {
         initProject(projects) {
             this.projects = projects;
-            this.currentProject = projects[0];
+
+            // Set the last project
+            let { cookies } = useCookies();
+            let lastProjectId = cookies.get('last_project');
+            let index = this.projects.findIndex(el => el.id == lastProjectId);
+            this.currentProject = this.projects[index];
+
             this.todos = this.currentProject.todos
+        },
+        changeProject(idProject) {
+            let index = this.projects.findIndex(el => el.id == idProject);
+            this.currentProject = this.projects[index];
+            this.todos = this.currentProject.todos;
         },
 
         updateList(payload) {
@@ -26,7 +38,7 @@ export const useProjectStore = defineStore('project', {
         pushNewList(payload) {
             this.todos.push(payload);
 
-            TodoService.create(payload, this.infor)
+            TodoService.create(payload, this.currentProject)
         },
         pushNewTask(payload) {
             let task = {
