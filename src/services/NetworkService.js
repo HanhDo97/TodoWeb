@@ -10,8 +10,8 @@ export default {
     },
     unAuthorized(err) {
         if (err.response && err.response.status === 401) {
-            const flassMessage = useFlashMessage();
-            flassMessage.addMessage({ message: 'Session is expired' })
+            const flashMessage = useFlashMessage();
+            flashMessage.addMessage({ message: 'Session is expired', type: 'error', timeout: 5 });
             router.push({ name: 'login' });
         }
     },

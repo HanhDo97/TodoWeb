@@ -2,6 +2,7 @@ import MessageService from "./MessageService";
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import HttpService from "./HttpService";
+import NetworkService from "./NetworkService";
 
 const baseURL = import.meta.env.VITE_BASE_URL
 const httpClient = axios.create({
@@ -12,16 +13,21 @@ const httpClient = axios.create({
     }
 });
 
-function updateTask(list, task) {
+function updateTask(list,task) {
     const idMessage = nanoid();
     MessageService.addMessageLoading(idMessage);
 
-    let url = '/position/tasks?list_id=' + list.id + '&task_id=' + task.id;
-    HttpService.sendGetRequest(url)
-        .then(res => {
-            console.log(res);
+    let data= {
+        taskId: task.id,
+        list
+    }
+
+
+    HttpService.sendPostRequest('/position/tasks', data)
+        .then(() => {
             MessageService.updateMessageSuccess(idMessage);
-        }).catch(() => {
+        }).catch((err) => {
+            NetworkService.unAuthorized(err);
             MessageService.updateErrorMessage(idMessage)
         });
 }
@@ -36,7 +42,8 @@ function updateTodos(data) {
         },
     }).then(() => {
         MessageService.updateMessageSuccess(idMessage);
-    }).catch(() => {
+    }).catch((err) => {
+        NetworkService.unAuthorized(err)
         MessageService.updateErrorMessage(idMessage);
     });
 }

@@ -1,31 +1,20 @@
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import MessageService from './MessageService';
+import HttpService from './HttpService';
+import { useProjectStore } from '@/stores/project';
 
 const baseURL = import.meta.env.VITE_BASE_URL
 const httpClient = axios.create({
-    baseURL: `${baseURL}/api/todos`,
+    baseURL: `${baseURL}/api`,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
     }
 });
-
-function sendPostRequest(url, data, idMessage) {
-    const token = localStorage.getItem('token');
-
-    httpClient.post(url, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }).then(() => {
-        MessageService.updateMessageSuccess(idMessage);
-    }).catch(() => {
-        MessageService.updateErrorMessage(idMessage);
-    });
-}
 export default {
     create(todo, project) {
+        const projectStore = useProjectStore();
         const idMessage = nanoid();
 
         MessageService.addMessageLoading(idMessage)
@@ -34,7 +23,12 @@ export default {
             'project_id': project.id,
             'order': todo.order
         }
-        sendPostRequest('', data, idMessage);
+        HttpService.sendPostRequest('/todos', data, idMessage)
+            .then(res => {
+                projectStore.updateTodoId(todo.id, res.data.id)
+            }).catch(() => {
+
+            });
     },
     update(data) {
         const idMessage = nanoid();

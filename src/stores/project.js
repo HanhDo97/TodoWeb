@@ -43,6 +43,10 @@ export const useProjectStore = defineStore('project', {
 
             TodoService.create(payload, this.currentProject)
         },
+        updateTodoId(oldId, newId) {
+            let indexNeedUpdate = this.todos.findIndex(el => el.id == oldId);
+            this.todos[indexNeedUpdate].id = newId;
+        },
         pushNewTask(payload) {
             let task = {
                 id: nanoid(),

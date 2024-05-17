@@ -204,6 +204,7 @@ function onTaskChange(list, event) {
     display: flex;
     align-items: flex-start;
     overflow-x: auto;
+    width: calc(100% - 25px);
 }
 
 .todo-list {
