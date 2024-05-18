@@ -2,10 +2,13 @@
 import { useLoadingStore } from '@/stores/loading';
 
 const loadingStore = useLoadingStore();
+const props = defineProps(['display'], {
+    display: false
+});
 </script>
 
 <template>
-    <div v-if="loadingStore.loading.page || loadingStore.loading.http" class="loading">
+    <div v-if="loadingStore.loading.page || loadingStore.loading.http || props.display" class="loading">
         <div class="loader"></div>
     </div>
 </template>

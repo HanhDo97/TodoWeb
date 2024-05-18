@@ -1,17 +1,8 @@
-import axios from 'axios';
 import { nanoid } from 'nanoid';
 import MessageService from './MessageService';
 import HttpService from './HttpService';
 import { useProjectStore } from '@/stores/project';
 
-const baseURL = import.meta.env.VITE_BASE_URL
-const httpClient = axios.create({
-    baseURL: `${baseURL}/api`,
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
 export default {
     create(todo, project) {
         const projectStore = useProjectStore();
@@ -35,7 +26,7 @@ export default {
         const token = localStorage.getItem('token');
 
         MessageService.addMessageLoading(idMessage)
-        httpClient.put(`/${data.id}`, data, {
+        HttpService.sendPutRequest(`/todos/${data.id}`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

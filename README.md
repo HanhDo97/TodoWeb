@@ -33,3 +33,5 @@ npm run build
 ```sh
 npm run lint
 ```
+
+Using pure css

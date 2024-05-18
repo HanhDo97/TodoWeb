@@ -9,7 +9,6 @@ import draggable from "vuedraggable/dist/vuedraggable.common";
 import { useProjectStore } from '@/stores/project';
 import { storeToRefs } from 'pinia';
 import PositionService from '@/services/PositionService';
-import TaskService from '@/services/TaskService';
 
 const projectStore = useProjectStore();
 const { todos, currentProject } = storeToRefs(projectStore);

@@ -1,10 +1,25 @@
 <script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useProjectStore } from '@/stores/project';
 import { storeToRefs } from 'pinia';
+import Share from '../abouts/Share.vue';
 
 const projectStore = useProjectStore();
 const { currentProject } = storeToRefs(projectStore);
+const display = ref({
+    share: false
+})
 
+onMounted(() => {
+
+})
+
+function toggleButton(btnClickedType) {
+    display.value[btnClickedType] = !display.value[btnClickedType]
+}
+function onCloseBoard(){
+    display.value.share = false;
+}
 </script>
 <template>
     <div class="project-about-wrapper">
@@ -27,12 +42,15 @@ const { currentProject } = storeToRefs(projectStore);
             <button><font-awesome-icon icon="fa-solid fa-bolt-lightning" /></button>
             <button><font-awesome-icon icon="fa-solid fa-filter" /></button>
             |
-            <button class="highlight-btn"><font-awesome-icon icon="fa-solid fa-user-plus" /> Share</button>
+            <button @click="toggleButton('share')" name="share-btn" class="highlight-btn"><font-awesome-icon
+                    icon="fa-solid fa-user-plus" /> Share</button>
             <button><font-awesome-icon icon="fa-solid fa-ellipsis" /></button>
         </div>
     </div>
+    <Share v-if="display.share" @close-board="onCloseBoard" />
 </template>
 <style scoped>
+/* ABOUT CSS */
 .about-right {
     text-align: right;
 }
@@ -75,6 +93,7 @@ const { currentProject } = storeToRefs(projectStore);
     display: grid;
     grid-template-columns: auto auto;
     width: calc(100% - 25px);
+    position: relative
 }
 
 @media (max-width: 350px) {
