@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useProjectStore } from '@/stores/project';
 import { useFlashMessage } from '@/stores/FlassMessage';
@@ -12,7 +12,16 @@ const flashMessage = useFlashMessage();
 const { currentProject } = storeToRefs(projectStore);
 const users = ref(null);
 const btnClickedType = ref('');
-const changeRoleBag = ref([])
+const changeRoleBag = ref([]);
+const selectedRole = ref({ code: 'member', name: 'Member', description: 'Boards must have at least one admin' });
+const roleBag = ref([
+    { code: 'admin', name: 'Admin', description: '' },
+    { code: 'member', name: 'Member', description: 'Boards must have at least one admin' },
+    { code: 'observer', name: 'Observer', description: 'Add people with limited permissions to this board' }
+]);
+const roleBagWithoutAdmin = computed(() => {
+    return roleBag.value.filter(el => el.code !== 'admin');
+})
 const display = ref({
     selectRole: false,
     changeRole: false,
@@ -29,7 +38,6 @@ onMounted(() => {
                 changeRole: false
             }
         });
-        console.log("🚀 ~ ProjectService.getUsers ~ changeRoleBag:", changeRoleBag)
 
         users.value = res.data.users;
         display.value.loader = false;
@@ -50,7 +58,24 @@ onUnmounted(() => {
     window.addEventListener('click', handleChangeRoleOutSideClick);
 })
 
+function getUserRole(user) {
+    console.log("🚀 ~ getUserRole ~ user:", user)
+    let rol = roleBag.value.find(rol => {
+        return rol.code == user.pivot.role
+    })
 
+    console.log("🚀 ~ getUserRole ~ rol:", rol)
+    return rol.name
+
+}
+function selectRoleChange(event, rol) {
+    selectedRole.value = rol;
+    display.value.selectRole = false;
+
+    event.stopPropagation();
+
+    window.removeEventListener('click', handleSelectRoleOutSideClick)
+}
 function toggleButton(event, type, changeRoleIndex) {
     setTimeout(() => {
 
@@ -138,11 +163,16 @@ function handleChangeRoleOutSideClick(event) {
                     <div class="rol-con">
                         <button @click="toggleButton($event, 'selectRole')" class="select-button"
                             :class="{ 'button-selected': display.selectRole }">
-                            <p>Member</p><font-awesome-icon icon="fa-solid fa-chevron-down" />
+                            <p>{{ selectedRole.name }}</p><font-awesome-icon icon="fa-solid fa-chevron-down" />
                         </button>
                         <div v-if="display.selectRole" class="select-role" name="select-role">
-                            <p>Member</p>
-                            <p>Observer <br> <small>Add people with limited permissions to this board</small></p>
+                            <p v-for="(rol, index) in roleBagWithoutAdmin" :key="index"
+                                :class="{ 'p-selected': selectedRole.code == rol.code }"
+                                @click="selectRoleChange($event, rol)">
+                                <span>{{ rol.name }}</span>
+                                <br> <small v-if="rol.description">{{
+                                    rol.description }}</small>
+                            </p>
                         </div>
                     </div>
                     <button name="exec-share-btn">
@@ -176,13 +206,14 @@ function handleChangeRoleOutSideClick(event) {
                         <div class="action">
                             <button @click="toggleButton($event, 'changeRole', index)" class="select-button" :class="{
                                 'button-selected': display.changeRole && changeRoleBag[index].changeRole
-                            }">Admin
+                            }">{{ getUserRole(user) }}
                                 <font-awesome-icon icon="fa-solid fa-chevron-down" /></button>
                             <div v-if="display.changeRole && changeRoleBag[index].changeRole" class="change-role"
                                 name="change-role">
-                                <p>Admin</p>
-                                <p>Membecr <br> <small>Boards must have at least one admin</small></p>
-                                <p>Observer <br> <small>Add people with limited permissions to this board</small>
+                                <p v-for="(rol, index) in roleBag" :key="index"
+                                    :class="{ 'p-selected': user.pivot.role == rol.code }">
+                                    {{ rol.name }}
+                                    <br> <small v-if="rol.description">{{ rol.description }}</small>
                                 </p>
                                 <p>Leave board</p>
                             </div>
@@ -204,6 +235,7 @@ function handleChangeRoleOutSideClick(event) {
     align-items: center;
     background-color: #22272B;
     font-size: 14px;
+    gap: 20px
 }
 
 .select-button:hover {
@@ -211,9 +243,14 @@ function handleChangeRoleOutSideClick(event) {
     cursor: pointer;
 }
 
+.p-selected,
 .button-selected {
     background-color: #09326C !important;
     color: #579DFF !important;
+}
+
+.p-selected {
+    border-left: 2px solid blue;
 }
 
 /* SHARE CSS */
