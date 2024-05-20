@@ -4,10 +4,6 @@ import Loader from '@/components/cores/Loader.vue';
 </script>
 
 <template>
-  <!-- <header>
-    <NavTop />
-  </header> -->
-
   <RouterView />
   <FlashMessage />
   <Loader />

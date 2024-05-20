@@ -1,28 +1,28 @@
-import axios from 'axios';
+import HttpService from './HttpService';
+import MessageService from './MessageService';
 import TokenService from './TokenService';
 import { useFlashMessage } from '@/stores/FlassMessage';
 
-const baseURL = import.meta.env.VITE_BASE_URL
-
-const httpClient = axios.create({
-    baseURL: `${baseURL}/api/user`,
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
-
 export default {
     async getInfor() {
-        const token = localStorage.getItem('token');
-        const response = await httpClient.get('/get', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
+        const response = await HttpService.sendGetRequest('/user/get')
         return response.data;
 
     },
+    async searchEmailOrName(emailOrName) {
+        const response = await HttpService.sendGetRequest('/user/s_e_n?qrTxt=' + emailOrName);
+
+        return response;
+    },
+
+    async inviteUserToBoard(rol,user,project) {
+        
+        let url = `/user/i_u?uI=${user.id}&rC=${rol.code}&pI=${project.id}`
+        await HttpService.sendGetRequest(url)
+            .then(res => MessageService.addSuccessMessage(res.data.message, 10))
+            .catch(() => MessageService.addErrorMessage('Error occurred'));
+    },
+
     logOut() {
         const token = localStorage.getItem('token');
         return TokenService.revokeToken(token);

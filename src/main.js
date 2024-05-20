@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import vue3GoogleLogin from 'vue3-google-login'
 
-import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faCheck, faCheckCircle, faChevronDown, faChevronLeft, faChevronRight, faCircle, faCircleXmark, faClock, faCopy, faEllipsis, faEllipsisVertical, faEye, faEyeSlash, faFilter, faGear, faGripVertical, faImage, faLink, faList, faMagnifyingGlass, faPencil, faPlus, faRightFromBracket, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faAddressCard, faBars, faBell, faBoltLightning, faBox, faCalendarDays, faChartColumn, faChartSimple, faCheck, faCheckCircle, faChevronDown, faChevronLeft, faChevronRight, faCircleXmark, faClock, faCopy, faEllipsis, faEllipsisVertical, faEye, faEyeSlash, faFilter, faGear, faGripVertical, faImage, faLink, faList, faMagnifyingGlass, faPencil, faPlus, faRightFromBracket, faRightLong, faRocket, faStar, faTable, faTag, faUser, faUserPlus, faUsersRays, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faList)

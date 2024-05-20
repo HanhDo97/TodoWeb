@@ -5,12 +5,15 @@ import { useProjectStore } from '@/stores/project';
 import { useFlashMessage } from '@/stores/FlassMessage';
 import Loader from '../cores/Loader.vue';
 import ProjectService from '@/services/ProjectService';
+import SearchEmailOrName from './SearchEmailOrName.vue';
+import UserService from '@/services/UserService';
 
-const emits = defineEmits('closeBoard');
+const emits = defineEmits(['closeBoard']);
 const projectStore = useProjectStore();
 const flashMessage = useFlashMessage();
 const { currentProject } = storeToRefs(projectStore);
 const users = ref(null);
+const selectedUser = ref(null);
 const btnClickedType = ref('');
 const changeRoleBag = ref([]);
 const selectedRole = ref({ code: 'member', name: 'Member', description: 'Boards must have at least one admin' });
@@ -26,6 +29,7 @@ const display = ref({
     selectRole: false,
     changeRole: false,
     loader: false,
+    loaderShareButton: false
 });
 
 onMounted(() => {
@@ -59,12 +63,10 @@ onUnmounted(() => {
 })
 
 function getUserRole(user) {
-    console.log("🚀 ~ getUserRole ~ user:", user)
     let rol = roleBag.value.find(rol => {
         return rol.code == user.pivot.role
     })
 
-    console.log("🚀 ~ getUserRole ~ rol:", rol)
     return rol.name
 
 }
@@ -145,6 +147,23 @@ function handleChangeRoleOutSideClick(event) {
 
     }
 }
+function onSelectedUser(user) {
+    selectedUser.value = user;
+}
+async function inviteUser(event) {
+    event.stopPropagation();
+
+    if (!selectedRole.value || !selectedUser.value || !currentProject) return;
+
+    display.value.loaderShareButton = true;
+
+    let rol = selectedRole.value;
+    let user = selectedUser.value;
+    let project = currentProject.value;
+    await UserService.inviteUserToBoard(rol, user, project);
+
+    display.value.loaderShareButton = false;
+}
 </script>
 
 <template>
@@ -153,12 +172,14 @@ function handleChangeRoleOutSideClick(event) {
         <div v-else class="wrapper">
             <div class="title">
                 <h2>Share board</h2>
-                <h2><button><font-awesome-icon icon="fa-solid fa-xmark" /></button></h2>
+                <h2><button>
+                        <font-awesome-icon icon="fa-solid fa-xmark" />
+                    </button></h2>
             </div>
             <div class="body">
                 <div class="action">
                     <div class="input-wrapp">
-                        <input type="text" placeholder="Enter address or name">
+                        <SearchEmailOrName @selected-user="onSelectedUser" />
                     </div>
                     <div class="rol-con">
                         <button @click="toggleButton($event, 'selectRole')" class="select-button"
@@ -175,8 +196,9 @@ function handleChangeRoleOutSideClick(event) {
                             </p>
                         </div>
                     </div>
-                    <button name="exec-share-btn">
-                        Share
+                    <button @click="inviteUser($event)" name="exec-share-btn">
+                        <span v-if="display.loaderShareButton == false">Share</span>
+                        <div v-else class="loader"></div>
                     </button>
                 </div>
 
@@ -225,6 +247,41 @@ function handleChangeRoleOutSideClick(event) {
     </div>
 </template>
 <style scoped>
+/* LOADER CSS */
+.loader {
+    width: 20px;
+    aspect-ratio: 1;
+    --c: no-repeat linear-gradient(#ffffff 0 0);
+    background:
+        var(--c) 0% 50%,
+        var(--c) 50% 50%,
+        var(--c) 100% 50%;
+    background-size: 20% 100%;
+    animation: l1 1s infinite linear;
+}
+
+@keyframes l1 {
+    0% {
+        background-size: 20% 100%, 20% 100%, 20% 100%
+    }
+
+    33% {
+        background-size: 20% 10%, 20% 100%, 20% 100%
+    }
+
+    50% {
+        background-size: 20% 100%, 20% 10%, 20% 100%
+    }
+
+    66% {
+        background-size: 20% 100%, 20% 100%, 20% 10%
+    }
+
+    100% {
+        background-size: 20% 100%, 20% 100%, 20% 100%
+    }
+}
+
 /* COMMON CSS */
 .select-button {
     height: 40px;
@@ -353,6 +410,9 @@ function handleChangeRoleOutSideClick(event) {
 }
 
 .share .body button[name=exec-share-btn] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 42px;
     background-color: hsl(240, 61%, 57%) !important;
 }
@@ -365,22 +425,7 @@ function handleChangeRoleOutSideClick(event) {
 .share .input-wrapp {
     border: 1px solid #B6C2CF;
     border-radius: 3px;
-}
-
-.share input {
-    height: 40px;
-    border: none;
-    background-color: #22272B;
-    color: var(--ds-text-subtle);
-    width: 100%;
-    font-size: 16px;
-    padding-left: 5px;
-    border-radius: 3px;
-}
-
-.share input[type="text"]:focus {
-    border: 2px solid #B6C2CF;
-    outline: none;
+    position: relative;
 }
 
 .share .body .action {
