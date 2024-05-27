@@ -9,20 +9,10 @@ import Star from './nav/Star.vue';
 import Create from './nav/Create.vue';
 import Notification from './nav/Notification.vue';
 import User from './nav/User.vue';
-import { useSocketStore } from '@/stores/socket';
-import { useUserStore } from '@/stores/user';
-import { useNotificationStore } from '@/stores/notification';
-import { storeToRefs } from 'pinia';
 import UserService from '@/services/UserService';
 
-// Get socket
-const useSocket = useSocketStore();
-const { socket } = storeToRefs(useSocketStore());
 // get User
-const userStore = useUserStore();
-const { infor } = storeToRefs(userStore);
 // get Notification
-const useNotification = useNotificationStore();
 // component setup
 const showInput = ref(false);
 const navNavigator = ref({
@@ -71,9 +61,6 @@ const navNavigator = ref({
 const searchWrapperEl = ref(null);
 
 onMounted(() => {
-    useSocket.setup('/user');
-    // socket.value.on('ReceiveInvited', handleReceiveInvited)
-
     // Get Notifications
     UserService.getNotifications();
 })

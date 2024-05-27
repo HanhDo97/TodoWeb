@@ -7,9 +7,7 @@ import Loader from '../cores/Loader.vue';
 import ProjectService from '@/services/ProjectService';
 import SearchEmailOrName from './SearchEmailOrName.vue';
 import UserService from '@/services/UserService';
-import { useSocketStore } from '@/stores/socket';
 
-const useSocket = useSocketStore();
 const emits = defineEmits(['closeBoard']);
 const projectStore = useProjectStore();
 const flashMessage = useFlashMessage();
