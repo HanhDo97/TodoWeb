@@ -51,10 +51,10 @@ function searchEmailOrName() {
 function getFirstCharaterOfName(user) {
     if (user.name)
         return user.name.charAt(0);
-    if(user.email)
+    if (user.email)
         return user.email.charAt(0);
 }
-function selectUser(ev,user){
+function selectUser(ev, user) {
     inputModel.value = user.email;
     display.value.result = false;
 
@@ -70,9 +70,7 @@ function selectUser(ev,user){
         </div>
         <div v-if="display.result" class="container">
             <Loader v-if="display.searchLoader" :display="true" />
-            <div v-for="(user, index) in users" :key="index" class="user"
-            @click="selectUser($event,user)"
-            >
+            <div v-for="(user, index) in users" :key="index" class="user" @click="selectUser($event, user)">
                 <div class="image"><b>{{ getFirstCharaterOfName(user) }}</b></div>
                 <div class="info">
                     <p>{{ user.name }}</p>

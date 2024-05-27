@@ -8,12 +8,19 @@ import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loading';
 import { useProjectStore } from '@/stores/project';
 import NetworkService from '@/services/NetworkService';
+import { usePusherStore } from '@/stores/pusher';
 
 const projectStore = useProjectStore();
 const loadingStore = useLoadingStore();
 const userStore = useUserStore();
+const pusherStore = usePusherStore();
 
 onMounted(() => {
+    
+    setTimeout(() => {
+        pusherStore.shouldGetNotifications();
+    }, 500);
+
     // Get user information
     UserService.getInfor()
         .then((res) => {

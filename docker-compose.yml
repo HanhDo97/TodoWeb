@@ -3,6 +3,7 @@ version: '3'
 services:
   todo_web:
     container_name: todo_web
+    restart: always
     build: .
     ports:
       - 5173:5173

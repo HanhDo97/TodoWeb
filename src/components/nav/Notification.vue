@@ -1,13 +1,17 @@
 <script setup>
 import { onMounted, ref, onUpdated } from 'vue';
+import { useNotificationStore } from '@/stores/notification';
+import { storeToRefs } from 'pinia';
+import Card from './notification/card.vue';
 
+const useNotification = useNotificationStore();
+const { unReadMess, readMess } = storeToRefs(useNotification);
 const props = defineProps(['bottom', 'right', 'top']);
 const showSlideDown = ref(false);
 const navNotificationWrapperEle = ref(null);
 const emit = defineEmits(['onClickOutSide'])
 const show = ref(false);
 const unread = ref(false);
-
 
 onMounted(() => {
     setTimeout(() => {
@@ -60,10 +64,26 @@ function toggleNotification(ev) {
                     </div>
                 </div>
                 <div class="content">
-                    <div class="empty-notification">
-                        <img src="/src/assets/sleep.png" alt="">
-                        <h2 v-if="!unread">No unread notifications</h2>
-                        <h2 v-else>No notifications</h2>
+                    <div class="notification">
+                        <div v-if="!unread" class="unread-wrapper">
+                            <div v-if="unReadMess.length == 0" class="empty-notification">
+                                <img src="/src/assets/sleep.png" alt="">
+                                <h2>No unread notifications</h2>
+                            </div>
+                            <p v-else v-for="message in unReadMess" :key="message.userId">
+                                <Card :message="message" />
+                            </p>
+                        </div>
+                        <div v-else class="read-wrapper">
+                            <div v-if="readMess.length == 0" class="empty-notification">
+                                <img src="/src/assets/sleep.png" alt="">
+                                <h2>No notifications</h2>
+                            </div>
+                            <p v-else v-for="message in readMess" :key="message.userId">
+                                {{ message.data.message }}
+                            </p>
+                        </div>
+
                     </div>
                 </div>
 
@@ -73,16 +93,18 @@ function toggleNotification(ev) {
 </template>
 
 <style>
-.notification-container .content img{
+.notification-container .content img {
     width: 100%;
 }
+
 .notification-container .content {
     width: 100%;
     padding: 10px;
     display: flex;
     justify-content: center;
 }
-.notification-container .content .empty-notification{
+
+.notification-container .content .empty-notification {
     width: 300px;
     height: 300px;
     margin-top: .5rem;

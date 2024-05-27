@@ -7,7 +7,9 @@ import Loader from '../cores/Loader.vue';
 import ProjectService from '@/services/ProjectService';
 import SearchEmailOrName from './SearchEmailOrName.vue';
 import UserService from '@/services/UserService';
+import { useSocketStore } from '@/stores/socket';
 
+const useSocket = useSocketStore();
 const emits = defineEmits(['closeBoard']);
 const projectStore = useProjectStore();
 const flashMessage = useFlashMessage();
@@ -161,6 +163,8 @@ async function inviteUser(event) {
     let user = selectedUser.value;
     let project = currentProject.value;
     await UserService.inviteUserToBoard(rol, user, project);
+
+    useSocket.emit('InviteUser', {rol, user})
 
     display.value.loaderShareButton = false;
 }

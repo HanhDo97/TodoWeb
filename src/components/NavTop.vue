@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUpdated } from 'vue';
+import { ref, onUpdated, onMounted } from 'vue';
 import Workspace from './nav/Workspace.vue';
 import Recent from './nav/Recent.vue';
 import More from './nav/More.vue';
@@ -9,7 +9,21 @@ import Star from './nav/Star.vue';
 import Create from './nav/Create.vue';
 import Notification from './nav/Notification.vue';
 import User from './nav/User.vue';
+import { useSocketStore } from '@/stores/socket';
+import { useUserStore } from '@/stores/user';
+import { useNotificationStore } from '@/stores/notification';
+import { storeToRefs } from 'pinia';
+import UserService from '@/services/UserService';
 
+// Get socket
+const useSocket = useSocketStore();
+const { socket } = storeToRefs(useSocketStore());
+// get User
+const userStore = useUserStore();
+const { infor } = storeToRefs(userStore);
+// get Notification
+const useNotification = useNotificationStore();
+// component setup
 const showInput = ref(false);
 const navNavigator = ref({
     user: {
@@ -56,11 +70,17 @@ const navNavigator = ref({
 });
 const searchWrapperEl = ref(null);
 
+onMounted(() => {
+    useSocket.setup('/user');
+    // socket.value.on('ReceiveInvited', handleReceiveInvited)
+
+    // Get Notifications
+    UserService.getNotifications();
+})
 onUpdated(() => {
     searchWrapperEl.value = document.getElementsByClassName('search-wrapper')[0];
     window.addEventListener('click', toggleInputSearch);
 })
-
 function toggleInputSearch(event) {
     if (searchWrapperEl.value !== undefined && searchWrapperEl.value.contains(event.target)) { /* empty */ }
     else {
