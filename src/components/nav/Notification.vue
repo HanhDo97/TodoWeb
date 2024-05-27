@@ -102,6 +102,9 @@ function toggleNotification(ev) {
     padding: 10px;
     display: flex;
     justify-content: center;
+    overflow: auto;
+    overflow-x: hidden;
+    height: 85%;
 }
 
 .notification-container .content .empty-notification {
